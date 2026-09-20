@@ -1,0 +1,157 @@
+generated: '2026-09-19'
+method: searched
+source: https://avalix.ai/autonoma/openapi.json
+derived_from: openapi/avalix-ai-openapi.json
+docs:
+- https://avalix.ai/autonoma/agents
+- https://avalix.ai/llms.txt
+- https://avalix.ai/autonoma/
+- https://avalix.ai/terms
+base_url: https://avalix.ai/autonoma
+media_type: application/json
+auth:
+  style: >-
+    No API key and no OAuth. Public routes (catalog, previews, demo, samples, verification) need nothing.
+    Paid routes are gated by x402 PAYMENT: POST once, receive 402 with exact Base USDC requirements, pay,
+    retry the same POST with Payment-Signature. The private quote/job/project routes use a bearer token the
+    server issues per quote or per accepted job (securityScheme reportToken, http bearer) — the OpenAPI calls
+    it a quote token on the acceptance routes and a report token on the read routes.
+  detail: authentication/avalix-ai-authentication.yml
+idempotency:
+  supported: false
+  coverage: none
+  mechanism: null
+  header: null
+  scope: []
+  retention: undocumented
+  description: >-
+    No Idempotency-Key header, parameter or body field exists on any of the 24 write operations, and neither
+    llms.txt nor the agents page documents one. What the payment layer offers instead is a settlement
+    binding: each 402 names an exact amount and recipient, the retry carries a Payment-Signature for that
+    payment, and the x402 manifest's maxTimeoutSeconds is 60. A duplicate retry after an ambiguous timeout is
+    therefore bounded by whether the same payment proof can be accepted twice — which the provider does not
+    document either way. Quotes are single-use and expire after 24 hours, which limits (but does not
+    eliminate) duplicate task acceptance.
+  gaps:
+  - No idempotency key on the thirteen paid /v1/* job routes or the two /x402/* relay routes.
+  - No idempotency key on POST /v1/tasks/quote, /accept, /card-intake, /usdt-accept or the Robinhood intents.
+  - No documented safe-retry guidance for a 202 that was sent but not received.
+dry_run_mode:
+  supported: true
+  status: documented
+  mechanism: dedicated free twin routes
+  surfaces:
+  - operation: 'POST /v1/demo (no operationId)'
+    cost: free, no key, no payment
+    description: 'Non-persistent data-distillation demo (500 characters, 5 fields); the response names the paid service it rehearses ("paid_service": "data-distill").'
+    probe: 'POST with {"text": "...", "fields": ["vendor","amount"]} answered 200 on 2026-09-19.'
+  - operation: 'POST /v1/trust/preview (no operationId); MCP trust_preview; A2A trust-preview'
+    cost: free, no wallet
+    description: '"Free deterministic preview of a supplied Agent Card, permissions, and authorization boundary. No job or revenue record is created."'
+  - operation: 'MCP compatibility_check; https://avalix.ai/autonoma/check'
+    cost: free
+    description: Static MCP/A2A/OpenAPI check that returns findings, evidence hashes, limitations and "the closest fixed-scope repair option".
+  - operation: 'POST /v1/tasks/quote; MCP quote_task'
+    cost: free
+    description: '"A quote does not deploy anything" (token-launch form) and "quoting itself is free" (agent card); the quote is the rehearsal for every paid custom task.'
+  detail: sandbox/avalix-ai-sandbox.yml
+reversibility:
+  grade: documented
+  docs: https://avalix.ai/autonoma/
+  note: >-
+    A reversal path exists on the human side — cancel before work starts, operator-approved refunds — and
+    the site-wide Terms state a 14-day window for asking, so the grade is documented (0.4). It is not
+    verified (1.0) because no API operation performs a cancel or refund, the 14-day window is a window for
+    EMAILING, not a guaranteed reversal, and delivered work is expressly non-refundable. Nothing below asserts
+    a window the provider has not written down.
+  write_surfaces:
+  - operation: 'POST /v1/tasks/quote -> /accept | /card-intake | /usdt-accept | /robinhood-eth-accept'
+    action: Commission bounded paid work against a fixed quote
+    reversal: cancel before work starts via the private project thread; refund only with operator approval
+    reversal_operation: 'POST /v1/projects/{project_id}/messages (the thread is the cancellation channel; no cancel operation exists)'
+    window: 'before work starts (cancellation); "within 14 days of purchase" to request a refund (site Terms)'
+    stated_terms:
+    - source: https://avalix.ai/autonoma/
+      verbatim: 'Cancellation: Quotes expire after 24 hours. Before work starts, request cancellation through the private project thread. Refunds require operator approval; completed or delivered work is not refundable.'
+    - source: https://avalix.ai/terms
+      verbatim: "Refunds: We offer refunds on a case-by-case basis. If you're not satisfied, email us within 14 days of purchase and we'll work it out."
+    grade: documented
+  - operation: 'trust_preflight, agent_card_lint, receipt_verifier, data_distill, mcp_compatibility, openapi_repair, agent_contract, research_brief (x402 paid jobs)'
+    action: Pay per job in USDC and receive a deterministic result or signed artifact
+    reversal: none documented for a completed job; the site Terms' case-by-case refund clause is the only path
+    reversal_operation: null
+    window: null
+    grade: documented
+    note: On-chain USDC payment is final at the rail; a Trust Passport is described as short-lived and expires on its own schedule (not published), which is expiry, not reversal.
+  - operation: integration_warranty_7d
+    action: Activate a seven-day signed availability warranty for one endpoint
+    reversal: none documented
+    window: null
+    grade: none
+    note: Time-bounded by design (7 days); no early termination or refund is described.
+  - operation: monitor
+    action: Create a bounded public-source monitoring result
+    reversal: none documented
+    grade: none
+  - operation: 'agent_risk_scan, agent_audit, agent_security_test'
+    action: Authorized review or test of a customer-owned agent configuration
+    reversal: not applicable to a read-only review; the payment follows the job rules above
+    grade: documented
+    note: 'Gated by an authorization attestation: "Security work requires explicit owner authorization and bounded target scope." Payment never expands authority (agents page).'
+  - operation: 'POST /v1/projects/{project_id}/messages'
+    action: Post a message into a private project thread
+    reversal: none
+    grade: none
+  - operation: 'POST /x402/agent-card-linter, POST /x402/data-validator'
+    action: Pay-per-call deterministic check relayed through PayanAgent
+    reversal: none documented
+    grade: none
+    note: 'Sub-dollar calls ($0.10 / $1.00); the manifest''s accounting_policy states revenue is recorded only after settlement is linked to a successful call.'
+pagination:
+  style: none
+  note: 'No list operation declares page, cursor, limit or offset. GET /v1/offers returns all eight offers; GET /v1/tasks/capabilities returns the whole capability list; GET /v1/agents/catalog is one document.'
+filtering_and_sorting:
+  supported: false
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: false
+request_id_tracing:
+  supported: false
+  note: No request-id or correlation-id header is declared or documented. Responses carry cf-ray (Cloudflare's trace id), which is a platform header, not a contract. Hash-addressed artifacts are the provider's dispute anchor instead — "integrity hash" on delivered source, "hash-addressed" task contracts, "evidence hashes" on free checks.
+async_pattern:
+  style: accept-then-poll
+  description: 'Every paid job route answers 202 "Paid job accepted"; the result is read with GET /v1/jobs/{job_id} (uuid) under the report token, or, for the public artifacts, GET /v1/trust/passports/{passport_id} and GET /v1/warranties/{warranty_id} without a token. No webhooks or push notifications (agent card capabilities.pushNotifications false).'
+versioning:
+  scheme: uri-path /v1/; info.version 1.0.0 across OpenAPI, MCP and A2A
+  detail: lifecycle/avalix-ai-lifecycle.yml
+errors:
+  envelope: '{"error": string} — not RFC 9457'
+  media_type: application/json
+  x402: HTTP 402 + Payment-Required header + PaymentRequired body
+  json_rpc: JSON-RPC 2.0 error objects on /mcp and /a2a/v1
+  detail: errors/avalix-ai-problem-types.yml
+rate_limit_signaling:
+  exhaustion_status: unpublished
+  headers: []
+  note: 'The only signal is the "rate-limited" tag on the free Trust Preview skill; no numbers, no headers. Detail: rate-limits/avalix-ai-rate-limits.yml'
+payment:
+  protocol: x402
+  asset: USDC (0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)
+  network: Base (eip155:8453)
+  recipient: 0xb747D079416A84d7F35e686Ea4a4252aacBEA0F3 (published as treasury_address in /.well-known/agent.json)
+  flow: >-
+    POST the paid route; receive 402 with a Payment-Required header and a JSON body (quoted_usdc,
+    asset_contract, recipient, payment_uri, submit); pay the exact amount; retry the same POST with
+    Payment-Signature. llms.txt: "Use an x402-compatible wallet to create the signed Payment-Signature
+    authorization, then retry the same POST. A Payment-Signature is not a pasted transaction hash." (The
+    live 402 body's submit line reads "Payment-Signature: <Base transaction hash>" — the two disagree on
+    what the proof is; the live challenge is authoritative for a given call.)
+  other_rails: [card via POST /v1/tasks/card-intake (Stripe), native Ethereum USDT via /v1/tasks/usdt-accept, Robinhood Chain ETH via a ten-minute intent, marketplace escrow (Hunazo), prefunded marketplace wallet (Agoragentic), sBTC inbox (AIBTC)]
+  safety_rules: ['Never send a private key, seed phrase, password, or unrelated confidential data.', 'Security work requires explicit owner authorization and bounded target scope.', 'Payment never expands authority.']
+audience_split:
+  public: 'catalog, previews, demo, samples, health/ready, passport and warranty verification, JWKS'
+  paid_public: 'thirteen /v1/* job routes and two /x402/* relay routes (x402, no account)'
+  token_holders: 'quote acceptance and payment rails (quote token); project thread and job status (report token)'

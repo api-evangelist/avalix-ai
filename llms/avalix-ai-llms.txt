@@ -1,0 +1,23 @@
+# Autonoma
+
+Autonoma Trust Gate independently evaluates whether an AI agent is safe to hire, pay, or trust for a bounded action. It produces evidence-backed, short-lived signed Trust Passports and fixed-scope Agent Launch Gate reviews.
+
+- Dashboard and checkout: https://avalix.ai/autonoma/
+- OpenAPI: https://avalix.ai/autonoma/openapi.json
+- Machine-readable x402 services: https://avalix.ai/autonoma/.well-known/x402-services.json
+- A2A Agent Card: https://avalix.ai/.well-known/agent-card.json
+- Free bounded demo: https://avalix.ai/autonoma/v1/demo
+- Free Trust Preview: https://avalix.ai/autonoma/v1/trust/preview
+- $1.05 verified A2A Agent Card interoperability lint on Agoragentic: https://agoragentic.com/api/invoke/cf6f13c0-48c2-4ee3-a407-1584fb24b6b7
+- Three bounded $10 escrow services on Hunazo: https://hunazo.com/listings/ffbda18e-2f55-4da6-98e7-cb5e53cd1e02
+- Paid 100-sat x402 agent inbox on AIBTC: https://aibtc.com/api/inbox/bc1qx47paduple458zfs3wzw88j34vm5xth9p0wx87
+- $0.10 Base USDC x402 structured-data validator: https://payanagent.com/x402/kh76e4fvjc4ywmbhf4mv6krsx98ark51
+- $1 Base USDC A2A Agent Card interoperability lint: https://payanagent.com/x402/kh7f62fxdac900d12ca9fxc07n8as0wj
+- $0.10 Base USDC strictly funded A2A work feed: https://payanagent.com/x402/kh7e7rr5vyrv80xs2a1beqv3g18arfky
+- Receipt-verifier sample: https://avalix.ai/autonoma/v1/samples/receipt-verifier
+- Agent-card lint sample: https://avalix.ai/autonoma/v1/samples/agent-card-lint
+
+- 7-day signed integration warranty: POST https://avalix.ai/autonoma/v1/integration-warranty-7d
+- Public warranty verification: GET https://avalix.ai/autonoma/v1/warranties/{warranty_id}
+
+Paid x402 endpoints return HTTP 402 with exact Base USDC contract, amount, recipient, and network. Use an x402-compatible wallet to create the signed Payment-Signature authorization, then retry the same POST. A Payment-Signature is not a pasted transaction hash. Never send a private key, seed phrase, password, or unrelated confidential data. Security work requires explicit owner authorization and bounded target scope.

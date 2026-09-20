@@ -1,23 +1,203 @@
 aid: avalix-ai
 name: Avalix
-description: 'Avalix is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Avalix (avalix.ai, est. 2026) is a custom AI implementation team — "three cyber engineers and one CTO" —
+  that audits small and mid-size businesses for time and revenue leaks and builds "AI employees" around them
+  (lead capture across calls, SMS, email and social, one CRM timeline, booking, follow-up, payments and
+  closeout), with quote-based enterprise engagements. Its public API surface is Autonoma, Avalix's disclosed
+  autonomous AI operator: a 33-path OpenAPI 3.1.0 "Autonoma Trust Gate" contract at
+  https://avalix.ai/autonoma/openapi.json that sells deterministic agent trust checks and signed Trust
+  Passports, A2A agent-card linting, MCP compatibility tests, OpenAPI structural repair, receipt
+  verification, data distillation, a seven-day integration warranty and fixed-price bounded technical work —
+  paid per call in USDC on Base through x402 (HTTP 402 + Payment-Required), with card, Ethereum USDT and
+  Robinhood Chain ETH rails for quoted tasks; a remote MCP server at https://avalix.ai/autonoma/mcp that
+  answers an anonymous initialize and tools/list with six tools; and an A2A 1.0.0 agent card at
+  /.well-known/agent-card.json backed by a live JSON-RPC endpoint at https://avalix.ai/autonoma/a2a/v1.
 url: https://raw.githubusercontent.com/api-evangelist/avalix-ai/refs/heads/main/apis.yml
+image: https://avalix.ai/brand/og-image.png
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-19 (local-v3; was a2a-registry harvest stub)
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
-- Company
-apis: []
+- Agents
+- Agent Commerce
+- A2A
+- MCP
+- x402
+- AI Trust
+- Agent Security
+- Data Validation
+- AI Implementation
+- Custom AI
+- agent-native
+tags_raw:
+- Agents
+- Agent commerce
+- A2A
+- MCP
+- x402
+- AI trust
+- Agent security
+- Data validation
+- AI implementation
+- Custom AI
+- Agent-native
+apis:
+- aid: avalix-ai:autonoma-trust-gate-api
+  name: Autonoma Trust Gate API
+  description: >-
+    Agent-consumable REST API for Autonoma, Avalix's disclosed autonomous AI operator. 33 paths under
+    https://avalix.ai/autonoma: free deterministic previews (POST /v1/demo, POST /v1/trust/preview), a public
+    offer catalog (GET /v1/offers, GET /v1/tasks/capabilities), fifteen x402-paid job routes under /v1/*
+    (trust preflight and signed Trust Passports, A2A agent-card lint, MCP compatibility, OpenAPI repair,
+    receipt verification, data distillation, authorized agent risk scan / audit / security test, research
+    brief, monitoring, agent task contract, seven-day integration warranty) that return HTTP 402 with exact
+    Base USDC payment requirements and accept a retry carrying Payment-Signature, two x402 relay routes under
+    /x402/*, a quote-and-accept flow for bounded custom work (card, Base USDC, Ethereum USDT, Robinhood
+    Chain ETH) behind bearer quote/report tokens, and public verification of issued Trust Passports and
+    warranties. Published as OpenAPI 3.1.0 at https://avalix.ai/autonoma/openapi.json (also served at
+    https://avalix.ai/openapi.json) with servers[] https://avalix.ai/autonoma.
+  humanURL: https://avalix.ai/autonoma/agents
+  baseURL: https://avalix.ai/autonoma
+  tags:
+  - Agents
+  - Agent Commerce
+  - x402
+  - AI Trust
+  - Data Validation
+  properties:
+  - type: OpenAPI
+    url: openapi/avalix-ai-openapi.json
+  - type: OpenAPI
+    name: Autonoma Trust Gate OpenAPI (provider-hosted)
+    url: https://avalix.ai/autonoma/openapi.json
+  - type: Documentation
+    url: https://avalix.ai/autonoma/agents
+  - type: APIReference
+    url: https://avalix.ai/autonoma/openapi.json
+  - type: Overlay
+    url: overlays/avalix-ai-openapi-overlay.yaml
+- aid: avalix-ai:autonoma-mcp-server
+  name: Autonoma MCP Server
+  description: >-
+    Remote Model Context Protocol server at https://avalix.ai/autonoma/mcp (Streamable HTTP, POST only —
+    a GET returns the site's JSON 404). initialize answers anonymously with protocolVersion 2025-11-25 and
+    serverInfo {name: ai.avalix/autonoma, title: Avalix Autonoma Agent Services, version: 1.0.0}; tools/list
+    answers anonymously with six tools — compatibility_check, list_offers, trust_preview, task_capabilities,
+    quote_task and request_service — each carrying a real inputSchema. resources/list and prompts/list return
+    -32601 Method not found. request_service without a payment_reference returns exact Base USDC payment
+    requirements and is retried with the confirmed transaction hash.
+  humanURL: https://avalix.ai/autonoma/agents
+  baseURL: https://avalix.ai/autonoma/mcp
+  tags:
+  - MCP
+  - agent-native
+  - Agent Commerce
+  properties:
+  - type: MCPServer
+    url: mcp/avalix-ai-mcp.yml
+  - type: MCPServer
+    name: Autonoma MCP endpoint (Streamable HTTP)
+    url: https://avalix.ai/autonoma/mcp
+  - type: ToolCrosswalk
+    url: mcp/avalix-ai-tool-crosswalk.yml
+- aid: avalix-ai:autonoma-a2a-agent
+  name: Autonoma A2A Agent
+  description: >-
+    Agent2Agent (A2A) protocol surface: an agent card served from https://avalix.ai/.well-known/agent-card.json
+    (and mirrored at /.well-known/agent.json's sibling path on www and under /autonoma/), protocolVersion
+    1.0.0, preferredTransport JSONRPC with an HTTP+JSON alternate, provider.organization Avalix, version
+    1.0.0, six skills — a free MCP/A2A/OpenAPI compatibility check, a free Trust Preview, fixed-price task
+    quoting, and three live x402 products (structured-data validator $0.10, A2A agent-card linter $1.00,
+    funded A2A opportunities feed $0.10, all Base USDC). The JSON-RPC endpoint at
+    https://avalix.ai/autonoma/a2a/v1 is live (tasks/get returns A2A error -32001 Task not found for an
+    unknown id); streaming, push notifications and the extended card are declared unsupported.
+  humanURL: https://avalix.ai/autonoma/agents
+  baseURL: https://avalix.ai/autonoma/a2a/v1
+  tags:
+  - A2A
+  - agent-native
+  - x402
+  properties:
+  - type: AgentCard
+    url: a2a/avalix-ai-a2a.yml
+  - type: AgentCard
+    name: A2A Agent Card (provider-hosted)
+    url: https://avalix.ai/.well-known/agent-card.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/avalix-ai-agentic-access.yml
+- type: VulnerabilityDisclosure
+  url: security/avalix-ai-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/avalix-ai-domain-security.yml
+- type: Authentication
+  url: authentication/avalix-ai-authentication.yml
 - type: Website
   url: https://avalix.ai/
+- type: Documentation
+  url: https://avalix.ai/autonoma/agents
+- type: APIReference
+  url: https://avalix.ai/autonoma/openapi.json
+- type: Pricing
+  url: https://avalix.ai/autonoma/services
+- type: TermsOfService
+  url: https://avalix.ai/terms
+- type: PrivacyPolicy
+  url: https://avalix.ai/privacy
+- type: Support
+  url: https://avalix.ai/contact
+- type: Login
+  url: https://avalix.ai/login
+- type: FAQ
+  url: https://avalix.ai/faq
+- type: LLMsTxt
+  url: llms/avalix-ai-llms.txt
+- type: AgentCard
+  url: a2a/avalix-ai-a2a.yml
+- type: MCPServer
+  url: mcp/avalix-ai-mcp.yml
+- type: WellKnown
+  url: well-known/avalix-ai-well-known.yml
+- type: SecurityTxt
+  url: well-known/avalix-ai-security.txt
+- type: Plans
+  url: plans/avalix-ai-plans-pricing.yml
+- type: Sandbox
+  url: sandbox/avalix-ai-sandbox.yml
+- type: Security
+  url: https://avalix.ai/.well-known/security.txt
+- type: Conventions
+  url: conventions/avalix-ai-conventions.yml
+- type: ErrorCatalog
+  url: errors/avalix-ai-problem-types.yml
+- type: DataModel
+  url: data-model/avalix-ai-data-model.yml
+- type: RateLimits
+  url: rate-limits/avalix-ai-rate-limits.yml
+- type: Conformance
+  url: conformance/avalix-ai-conformance.yml
+- type: Lifecycle
+  url: lifecycle/avalix-ai-lifecycle.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AITransparency
+  url: https://avalix.ai/autonoma/
+- type: DataSubjectRequest
+  url: https://avalix.ai/privacy
+- type: Subprocessors
+  url: https://avalix.ai/privacy
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 31
+  pass: local-v3

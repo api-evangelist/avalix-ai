@@ -1,0 +1,17 @@
+generated: '2026-09-19'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: avalix.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Dec 15 02:50:35 2026 GMT
+  hsts: true
+  hsts_max_age: 15552000
+domains:
+- domain: avalix.ai
+  dnssec: true
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: none

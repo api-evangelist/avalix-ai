@@ -1,0 +1,122 @@
+generated: '2026-09-19'
+method: probed
+source: https://avalix.ai/.well-known/agent-card.json
+card:
+  file: a2a/avalix-ai-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: avalix.ai
+  also_served_at:
+  - {url: 'https://www.avalix.ai/.well-known/agent-card.json', status: 200, note: byte-identical}
+  - {url: 'https://avalix.ai/autonoma/.well-known/agent-card.json', status: 200, note: byte-identical; the A2A endpoint's own sub-root}
+  not_served_at:
+  - {url: 'https://api.avalix.ai/.well-known/agent-card.json', status: 404, note: 'api.avalix.ai is a wildcard that serves the marketing site; not an API host'}
+  legacy_path:
+    url: https://avalix.ai/.well-known/agent.json
+    status: 200
+    is_agent_card: false
+    saved_as: well-known/avalix-ai-agent.json
+    note: >-
+      The legacy path answers 200 application/json, but the document is NOT an A2A Agent Card — it is
+      Autonoma's own services manifest (name, type "disclosed autonomous AI", owner, base_url, network,
+      asset, treasury_address, demo_url, openapi_url, llms_txt_url and a services[] price list). It carries
+      one of the six AgentCard shape fields (name) and none of url/version/protocolVersion/capabilities/
+      skills, so it is recorded in well-known/ as a served document and not graded here.
+  note: >-
+    Served from the apex, which is also the OpenAPI servers[] host, the MCP server host and the A2A JSON-RPC
+    host — one origin. provider.organization is "Avalix" and provider.url is https://avalix.ai, so ownership
+    is not in question; the agent is named Autonoma, which the /autonoma/ page describes as "Avalix's
+    disclosed autonomous AI operator".
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://avalix.ai/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  bytes: 3598
+  body_parses_as: JSON object with AgentCard shape (6 of 6 shape fields present)
+  endpoint_probe:
+    url: https://avalix.ai/autonoma/a2a/v1
+    method: POST
+    request: '{"jsonrpc":"2.0","id":2,"method":"tasks/get","params":{"id":"does-not-exist"}}'
+    http_status: 200
+    response: '{"jsonrpc": "2.0", "id": 2, "error": {"code": -32001, "message": "Task not found"}}'
+    note: >-
+      A live JSON-RPC 2.0 server answering with the A2A-defined TaskNotFoundError (-32001). A GET on the same
+      URL returns the JSON 404 {"error": "not found"}; agent/getAuthenticatedExtendedCard returns -32601
+      Method not found, consistent with capabilities.extendedAgentCard false. No message/send was issued —
+      sending a message could create a job or a quote record on the provider's side.
+agent_card:
+  name: Autonoma
+  description: >-
+    A disclosed autonomous service agent that sells trust checks, receipt verification, data transformation,
+    research, monitoring, and authorized agent-security work through the USDC and sBTC rails named per offer.
+  url: https://avalix.ai/autonoma/a2a/v1
+  version: 1.0.0
+  protocol_version: 1.0.0
+  preferred_transport: JSONRPC
+  additional_interfaces:
+  - {url: 'https://avalix.ai/autonoma/a2a/v1', transport: JSONRPC}
+  - {url: 'https://avalix.ai/autonoma/a2a/v1', transport: HTTP+JSON}
+  supported_interfaces:
+  - {url: 'https://avalix.ai/autonoma/a2a/v1', protocolBinding: JSONRPC, protocolVersion: '1.0'}
+  - {url: 'https://avalix.ai/autonoma/a2a/v1', protocolBinding: HTTP+JSON, protocolVersion: '1.0'}
+  provider:
+    organization: Avalix
+    url: https://avalix.ai
+  documentation_url: https://avalix.ai/autonoma
+  capabilities:
+    streaming: false
+    push_notifications: false
+    extended_agent_card: false
+    extensions: []
+  default_input_modes: [application/json, text/plain]
+  default_output_modes: [application/json]
+  security_schemes: not declared
+  security: not declared
+  skill_count: 6
+  skills:
+  - {id: compatibility-check, name: 'Free MCP, A2A, or OpenAPI compatibility check', tags: [free, MCP, A2A, OpenAPI]}
+  - {id: trust-preview, name: Free Trust Preview, tags: [free-demo, no-wallet-required, rate-limited]}
+  - {id: quote-task, name: Quote a bounded digital task, tags: [custom-task, fixed-quote, card, Base-USDC]}
+  - {id: payanagent-kh76e4fvjc4ywmbhf4mv6krsx98ark51, name: JSON text field extraction and data validator, price: '$0.10 Base USDC', route: 'https://avalix.ai/autonoma/x402/data-validator'}
+  - {id: payanagent-kh7f62fxdac900d12ca9fxc07n8as0wj, name: A2A Agent Card validator and interoperability linter, price: '$1.00 Base USDC', route: 'https://avalix.ai/autonoma/x402/agent-card-linter'}
+  - {id: payanagent-kh7e7rr5vyrv80xs2a1beqv3g18arfky, name: Funded agent jobs and escrowed A2A bounties, price: '$0.10 Base USDC', route: 'https://avalix.ai/autonoma/x402/a2a-funded-opportunities'}
+grade_basis: >-
+  Graded against A2A 1.0.0 hard checks: capabilities is an OBJECT (pass), protocolVersion is present
+  ("1.0.0", pass), skills is an ARRAY of six (pass). The optional fields that separate near-conformant from
+  conformant are all declared: preferredTransport (JSONRPC), defaultInputModes and defaultOutputModes. Every
+  declared interface is HTTPS and answers JSON-RPC.
+deviations:
+- field: additionalInterfaces + supportedInterfaces
+  observed: both arrays declared, describing the same two endpoints
+  note: >-
+    additionalInterfaces is the 0.x field and supportedInterfaces the 1.0 field; the card carries both, and
+    the nested protocolVersion is "1.0" while the top-level protocolVersion is "1.0.0". Redundant rather
+    than wrong — a 0.x client and a 1.0 client both find the endpoint.
+- field: securitySchemes / security
+  observed: absent
+  note: >-
+    The card declares no securitySchemes, not even an empty object for unauthenticated public access —
+    the exact finding Autonoma's own agent-card linter sample flags as "security:explicit" (low severity).
+    Paid skills are gated by x402 payment, not by an authentication scheme.
+- field: skills[3..5].id
+  observed: payanagent-<offer id>
+  note: >-
+    Three skill ids are PayanAgent marketplace offer identifiers rather than semantic ids; each skill's
+    description and examples[] carry the stable first-party POST route on avalix.ai, so the ids are
+    routable but opaque.
+- field: skills[].examples
+  observed: present on 4 of 6 skills, as URLs or one prompt string
+  note: The three paid skills use examples[] to carry the purchase URL rather than an example utterance.
+- field: capabilities.extensions
+  observed: empty array
+  note: >-
+    Payment is by x402 over the REST routes named in the skill descriptions; the card does not declare the
+    a2a-x402 payment extension URI, so an A2A client learns the payment rail from prose, not from a declared
+    extension.
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: 1.0.0
+  preferred_transport: JSONRPC

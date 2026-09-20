@@ -1,0 +1,55 @@
+generated: '2026-09-19'
+method: searched
+source: https://avalix.ai/autonoma/agents
+docs:
+- https://avalix.ai/autonoma/check
+- https://avalix.ai/autonoma/services
+- https://avalix.ai/llms.txt
+probed:
+- {url: 'https://avalix.ai/autonoma/v1/demo', method: POST, status: 200, fetched: '2026-09-19', body_sent: '{"text":"Invoice 123 from ACME for $40 due 2026-10-01","fields":["vendor","amount"]}', observed: '{"demo": true, "result": {"values": {"vendor": null, "amount": null}, "source_characters": 44}, "limits": {"characters": 500, "fields": 5}, "paid_service": "data-distill"}'}
+- {url: 'https://avalix.ai/autonoma/v1/trust/preview', method: POST, status: 400, fetched: '2026-09-19', body_sent: '{}', observed: '{"error": "agent_card must be a JSON object"}'}
+- {url: 'https://avalix.ai/autonoma/v1/samples/receipt-verifier', status: 200, fetched: '2026-09-19', observed: 'sample: true; a nine-check commerce_receipt report with limitations[]'}
+- {url: 'https://avalix.ai/autonoma/v1/samples/agent-card-lint', status: 200, fetched: '2026-09-19', observed: 'sample: true; a nine-check lint of an intentionally incomplete card with three findings'}
+- {url: 'https://avalix.ai/autonoma/v1/receipt-verifier', method: POST, status: 402, fetched: '2026-09-19', body_sent: '{}', note: 'the paid twin; confirms the 402 challenge shape without paying'}
+summary: >-
+  Autonoma has no separate test environment, test-mode keys or test payment values; production is the
+  sandbox. Its rehearsal surface is a set of FREE, non-persistent routes that run the same deterministic
+  checks as the paid services on bounded input — a data-distillation demo, a Trust Preview of a supplied
+  agent card, a static MCP/A2A/OpenAPI compatibility check (MCP tool, A2A skill and web form) — plus two
+  published sample reports that show the paid output shape before buying. The provider's own words: "No
+  account required. Reports are not published. Never submit secrets." Quoting a task is also free. No test
+  card numbers, test wallets or test transaction hashes are published; x402 payments are real Base USDC.
+test_vs_live:
+  separate_environment: false
+  test_keys: none — the API has no API keys; bearer quote/report tokens are issued per quote or job
+  test_payment_values: none published
+  note: One host, one payment network (Base mainnet, chain_id 8453). Nothing here rehearses a payment.
+free_previews:
+- name: Data-distillation demo
+  operation: 'POST /v1/demo (no operationId)'
+  cost: free, no key, no payment
+  limits: {text_characters: 500, fields: 5}
+  behaviour: 'Non-persistent deterministic field extraction; the response names the paid service it previews ("paid_service": "data-distill") and echoes its own limits.'
+  paid_twin: [data_distill, 'POST /x402/data-validator']
+- name: Trust Preview
+  operation: 'POST /v1/trust/preview (no operationId); MCP tool trust_preview; A2A skill trust-preview'
+  cost: free, no wallet required
+  input: agent_card (JSON object) plus permissions and authorization boundary
+  behaviour: '"Free deterministic preview of a supplied Agent Card, permissions, and authorization boundary. No job or revenue record is created." Tagged rate-limited by the provider.'
+  paid_twin: [trust_preflight]
+- name: Compatibility check
+  operation: 'MCP tool compatibility_check {kind: auto|a2a|mcp|openapi, url | document}; A2A skill compatibility-check; web form https://avalix.ai/autonoma/check'
+  cost: free
+  behaviour: 'Deterministic findings, evidence hashes, explicit limitations, and the closest fixed-scope repair option. "No account required. Reports are not published."'
+  paid_twin: [mcp_compatibility, agent_card_lint, openapi_repair]
+- name: Quote
+  operation: 'POST /v1/tasks/quote (no operationId); MCP tool quote_task'
+  cost: '"quoting itself is free"'
+  note: Creates a quote record on the provider side (quotes expire after 24 hours), so this pipeline did not invoke it.
+sample_outputs:
+- {name: Receipt-verifier sample, url: 'https://avalix.ai/autonoma/v1/samples/receipt-verifier', shape: 'input + report {schema commerce_receipt, reviewable, summary, checks[9], missing_fields, limitations}'}
+- {name: Agent-card lint sample, url: 'https://avalix.ai/autonoma/v1/samples/agent-card-lint', shape: 'input + report {summary, checks[9] (required:*, transport:declared, transport:https, skills:unique_ids, security:explicit), findings[] with severity, limitations}'}
+- {name: Illustrative deliverables for humans, urls: ['https://avalix.ai/autonoma/examples/integration-diagnostic', 'https://avalix.ai/autonoma/examples/build-sprint', 'https://avalix.ai/autonoma/examples/website-preview'], note: '"Examples are illustrative, not customer results."'}
+health_endpoints:
+- {url: 'https://avalix.ai/autonoma/health', status: 200, note: 'Public connector-by-connector health report (healthy/degraded per sales channel) — far more than a liveness bit.'}
+- {url: 'https://avalix.ai/autonoma/ready', status: 200, note: 'ready, audit head, database, worker age and the running release hash.'}

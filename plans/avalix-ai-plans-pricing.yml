@@ -1,0 +1,274 @@
+generated: '2026-09-19'
+method: searched
+source: https://avalix.ai/autonoma/services
+machine_sources:
+- https://avalix.ai/autonoma/v1/offers
+- https://avalix.ai/autonoma/.well-known/x402-services.json
+- https://avalix.ai/autonoma/v1/agents/catalog
+docs:
+- https://avalix.ai/autonoma/
+- https://avalix.ai/autonoma/agents
+- https://avalix.ai/autonoma/live
+- https://avalix.ai/terms
+plan_count: 22
+currency: USDC / USD
+model: pay-per-job or pay-per-call; no subscription, no account and no API key required; quotes for bounded custom
+  work
+summary: 'Avalix publishes no tiers for the Autonoma API. Every service is a fixed price: eight machine offers priced
+  in USDC and paid by x402 on Base (or through MCP request_service), three low-cost x402 products relayed through
+  PayanAgent, and a nine-rung fixed-scope service ladder for humans quoted through POST /v1/tasks/quote and paid
+  by card, Base USDC, Ethereum USDT or Robinhood Chain ETH. Prices are as served by the provider''s own machine-readable
+  catalogs on 2026-09-19; the human pages state that quotes expire after 24 hours, that unassessable work is declined
+  before payment, and that production hosting, store submission and third-party fees are excluded unless separately
+  scoped. The separate Avalix ''AI Employee'' business (Essential / Growth / Scale) publishes no prices — it is
+  scoped through a free audit and, for enterprise, ''isn''t a published menu''.'
+plans:
+- id: mcp-compatibility
+  name: MCP Compatibility Test
+  price: 3.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Static deterministic compatibility report for a supplied MCP initialize result and tool list.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: openapi-repair
+  name: OpenAPI Structural Repair
+  price: 5.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Conservatively repair a supplied OpenAPI JSON document and return change and integrity evidence.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: agent-contract
+  name: Agent Task Contract Generator
+  price: 5.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Turn a bounded task and acceptance criteria into a hash-addressed machine-readable obligation and
+    receipt contract.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: receipt-verifier
+  name: Agent action receipt verifier
+  price: 1.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Deterministic reviewability check for a supplied agent action receipt.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: custom-task-25
+  name: Integration Diagnostic
+  price: 25.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Reproduce one bounded MCP, A2A, or API blocker and return the root cause plus remediation plan.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: custom-task-49
+  name: Integration Patch
+  price: 49.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Implement one bounded integration correction in customer-authorized material and return the patch.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: integration-warranty-7d
+  name: 7-Day Agent Integration Warranty
+  price: 49.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Evidence-backed availability warranty for one authorized public HTTPS endpoint, with recurring checks,
+    incident detection, and approval-gated repair.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: custom-task-99
+  name: Validated Integration Repair
+  price: 99.0
+  currency: USDC
+  period: per job
+  rail: x402 Base USDC (HTTP 402 + Payment-Signature) on the matching POST /v1/* route, or MCP request_service
+  status: active
+  description: Implement and test one bounded integration repair with an evidence bundle.
+  source: https://avalix.ai/autonoma/v1/offers
+- id: autonoma-agent-card-linter
+  name: Autonoma A2A Agent Card Linter
+  price: 1.0
+  currency: USDC
+  period: per call
+  rail: x402 exact scheme on eip155:8453 (Base), maxTimeoutSeconds 60
+  route: https://avalix.ai/autonoma/x402/agent-card-linter
+  upstream_relay: https://payanagent.com/x402/kh7f62fxdac900d12ca9fxc07n8as0wj
+  free_preview: https://avalix.ai/autonoma/v1/samples/agent-card-lint
+  limits: []
+  source: https://avalix.ai/autonoma/.well-known/x402-services.json
+- id: autonoma-data-validator
+  name: Autonoma Structured Data Validator
+  price: 0.1
+  currency: USDC
+  period: per call
+  rail: x402 exact scheme on eip155:8453 (Base), maxTimeoutSeconds 60
+  route: https://avalix.ai/autonoma/x402/data-validator
+  upstream_relay: https://payanagent.com/x402/kh76e4fvjc4ywmbhf4mv6krsx98ark51
+  free_preview: https://avalix.ai/autonoma/v1/demo
+  limits:
+  - 'text: {''type'': ''string'', ''maxLength'': 10000}'
+  - 'fields: {''type'': ''array'', ''maxItems'': 25, ''items'': {''type'': ''string''}}'
+  source: https://avalix.ai/autonoma/.well-known/x402-services.json
+- id: autonoma-funded-a2a-opportunities
+  name: Funded Agent Jobs and Escrowed A2A Bounties
+  price: 0.1
+  currency: USDC
+  period: per call
+  rail: x402 exact scheme on eip155:8453 (Base), maxTimeoutSeconds 60
+  route: https://avalix.ai/autonoma/x402/a2a-funded-opportunities
+  upstream_relay: https://payanagent.com/x402/kh7e7rr5vyrv80xs2a1beqv3g18arfky
+  free_preview: null
+  limits: []
+  source: https://avalix.ai/autonoma/.well-known/x402-services.json
+- id: landing-page
+  name: Landing Page
+  price: 199
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: one responsive landing page with up to five sections, local preview package, validation evidence,
+    and one bounded revision
+  quote_url: https://avalix.ai/autonoma/quote?campaign=landing-page
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: small-business-site
+  name: Small Business Site
+  price: 499
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: up to five responsive static pages with basic SEO, configurable contact CTA, local preview package,
+    validation evidence, and one bounded revision
+  quote_url: https://avalix.ai/autonoma/quote?campaign=small-business-site
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: diagnostic
+  name: Diagnostic
+  price: 25
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: root-cause diagnostic, evidence, smallest repair plan, and one acceptance test
+  quote_url: https://avalix.ai/autonoma/quote?campaign=diagnostic
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: patch
+  name: Patch
+  price: 49
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: one bounded patch with implementation notes
+  quote_url: https://avalix.ai/autonoma/quote?campaign=patch
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: business-scope-plan
+  name: Business Scope Plan
+  price: 49.99
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: business scope, UX and visual design review, mobile and accessibility findings, prioritized website/app
+    improvements, and a 30-day roadmap
+  quote_url: https://avalix.ai/autonoma/quote?campaign=business-scope-plan
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: validated-repair
+  name: Validated Repair
+  price: 99
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: one bounded repair, regression test, and evidence bundle
+  quote_url: https://avalix.ai/autonoma/quote?campaign=validated-repair
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: focused-project
+  name: Focused Project
+  price: 199
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: one focused implementation milestone delivered as a private source package with local preview launcher
+    and acceptance evidence
+  quote_url: https://avalix.ai/autonoma/quote?campaign=focused-project
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: build-sprint
+  name: Build Sprint
+  price: 499
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: one fixed-scope build sprint delivered as a private source package with tests, local preview launchers,
+    and setup instructions
+  quote_url: https://avalix.ai/autonoma/quote?campaign=build-sprint
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: monitoring-30d
+  name: Monitoring 30D
+  price: 199
+  currency: USD
+  period: per fixed-scope engagement
+  rail: quote first (POST /v1/tasks/quote), then card, Base USDC, Ethereum USDT or Robinhood Chain ETH
+  deliverable: monitor setup, alert criteria, and the first 30 days of bounded public-endpoint monitoring
+  quote_url: https://avalix.ai/autonoma/quote?campaign=monitoring-30d
+  source: https://avalix.ai/autonoma/v1/agents/catalog
+- id: agent-launch-review
+  name: Agent Launch Review
+  price: 49
+  currency: USD
+  period: per review
+  rail: card or Base USDC
+  description: Prioritized findings and a signed, scope-bound report.
+  source: https://avalix.ai/autonoma/live
+- id: remediation-rescan
+  name: Remediation + Rescan
+  price: 199
+  currency: USD
+  period: per rescan
+  rail: card
+  description: Review fixes, rescan evidence, and issue the updated report.
+  source: https://avalix.ai/autonoma/live
+free_tier:
+  demo: POST /v1/demo — free, non-persistent data-distillation demo (text up to 500 characters, up to 5 fields)
+  trust_preview: POST /v1/trust/preview — free deterministic preview of a supplied agent card; "No job or revenue
+    record is created"; tagged rate-limited
+  compatibility_check: MCP tool compatibility_check / A2A skill compatibility-check / https://avalix.ai/autonoma/check
+    — free static MCP, A2A or OpenAPI check
+  quoting: POST /v1/tasks/quote and MCP quote_task — "quoting itself is free"
+  samples:
+  - https://avalix.ai/autonoma/v1/samples/receipt-verifier
+  - https://avalix.ai/autonoma/v1/samples/agent-card-lint
+  design_partner: '"Three design-partner openings" — a free launch review for qualified AI builders in exchange
+    for feedback (https://avalix.ai/autonoma/live)'
+payment_terms:
+  x402:
+    network: Base (eip155:8453)
+    asset: USDC 0x833589fcd6edb6e08f4c7c32d4f71b54bda02913
+    recipient: 0xb747D079416A84d7F35e686Ea4a4252aacBEA0F3 (the treasury_address the provider publishes in /.well-known/agent.json)
+    scheme: exact
+    max_timeout_seconds: 60
+    flow: POST the route; receive 402 with a Payment-Required header and JSON body (quoted_usdc, asset_contract,
+      recipient, payment_uri); pay; retry the same POST with Payment-Signature
+  other_rails:
+  - card (Stripe, per the privacy policy) via POST /v1/tasks/card-intake
+  - native Ethereum USDT via POST /v1/tasks/usdt-accept
+  - Robinhood Chain ETH via a ten-minute exact-amount intent (POST /v1/tasks/robinhood-eth-intent then -accept)
+  - 'marketplace rails: Agoragentic prefunded USDC, Hunazo escrow (2% fee), AIBTC 100-sat sBTC inbox'
+  quote_expiry: Quotes expire after 24 hours (https://avalix.ai/autonoma/)
+  refunds: '"Refunds require operator approval; completed or delivered work is not refundable." (https://avalix.ai/autonoma/)
+    — the site-wide Terms add "refunds on a case-by-case basis ... email us within 14 days of purchase"'
+  accounting_policy: Revenue is recorded only after an external customer payment settles and is linked to a successful
+    service call.
+ai_employee_business:
+  tiers:
+  - Essential
+  - Growth
+  - Scale
+  prices: not published — scoped after a free business audit; enterprise is quote-based
+  source: https://avalix.ai/#solutions and https://avalix.ai/enterprise

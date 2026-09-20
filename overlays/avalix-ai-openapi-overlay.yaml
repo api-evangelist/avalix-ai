@@ -1,0 +1,65 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Autonoma Trust Gate
+  version: 1.0.0
+  description: >-
+    Overlay applied by API Evangelist on top of the provider-published OpenAPI 3.1.0 at
+    https://avalix.ai/autonoma/openapi.json (saved verbatim as openapi/avalix-ai-openapi.json, never
+    edited). Adds operationIds to the 20 operations the provider left without one, a tag taxonomy, the
+    observed error-body shape, and x-apievangelist provenance. Nothing here changes a path, parameter,
+    security requirement or response the provider declared.
+extends: openapi/avalix-ai-openapi.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provenance:
+      harvested: '2026-09-19'
+      source: https://avalix.ai/autonoma/openapi.json
+      sha256_prefix: 7f1aeb21aff28f0e
+      owner_check: 'servers[] https://avalix.ai/autonoma; agent card provider.organization Avalix; MCP serverInfo ai.avalix/autonoma — one first-party origin'
+    x-apievangelist-observed-error-envelope: '{"error": string} (not RFC 9457)'
+- target: $
+  update:
+    tags:
+    - {name: Health, description: Liveness and readiness}
+    - {name: Catalog, description: Offers, capabilities and prices}
+    - {name: Free Preview, description: Free, non-persistent deterministic checks}
+    - {name: Quote, description: Fixed-price quoting for bounded custom work}
+    - {name: Payment Rails, description: Quote acceptance by card, Base USDC, Ethereum USDT or Robinhood Chain ETH}
+    - {name: Paid Jobs, description: x402-paid deterministic services (HTTP 402 then retry with Payment-Signature)}
+    - {name: x402 Relay, description: PayanAgent-listed x402 products}
+    - {name: Verification, description: Public signed artifacts and keys}
+    - {name: Private, description: Bearer-token project thread and job status}
+- {target: "$.paths['/health'].get", update: {operationId: get_health, tags: [Health]}}
+- {target: "$.paths['/ready'].get", update: {operationId: get_ready, tags: [Health]}}
+- {target: "$.paths['/v1/offers'].get", update: {operationId: list_offers, tags: [Catalog]}}
+- {target: "$.paths['/v1/tasks/capabilities'].get", update: {operationId: list_task_capabilities, tags: [Catalog]}}
+- {target: "$.paths['/v1/demo'].post", update: {operationId: run_demo, tags: [Free Preview]}}
+- {target: "$.paths['/v1/trust/preview'].post", update: {operationId: trust_preview, tags: [Free Preview], 'x-apievangelist-observed': 'empty body -> 400 {"error": "agent_card must be a JSON object"}'}}
+- {target: "$.paths['/v1/tasks/quote'].post", update: {operationId: quote_task, tags: [Quote], 'x-apievangelist-request-contract': 'per MCP tool quote_task: required request (maxLength 12000), target_scope (maxLength 2000), authorization_attestation (const true); optional deliverables (maxItems 10)'}}
+- {target: "$.paths['/v1/tasks/card-intake'].post", update: {operationId: create_card_intake, tags: [Payment Rails]}}
+- {target: "$.paths['/v1/tasks/accept'].post", update: {operationId: accept_quote_usdc, tags: [Payment Rails]}}
+- {target: "$.paths['/v1/tasks/usdt-accept'].post", update: {operationId: accept_quote_usdt, tags: [Payment Rails]}}
+- {target: "$.paths['/v1/tasks/robinhood-eth-intent'].post", update: {operationId: create_robinhood_eth_intent, tags: [Payment Rails]}}
+- {target: "$.paths['/v1/tasks/robinhood-eth-accept'].post", update: {operationId: accept_quote_robinhood_eth, tags: [Payment Rails]}}
+- {target: "$.paths['/x402/agent-card-linter'].post", update: {operationId: x402_agent_card_linter, tags: [x402 Relay]}}
+- {target: "$.paths['/x402/data-validator'].post", update: {operationId: x402_data_validator, tags: [x402 Relay], 'x-apievangelist-observed': 'valid-shaped body -> 400 {"error":"Invalid offer ID"} on 2026-09-19'}}
+- {target: "$.paths['/v1/trust/passports/{passport_id}'].get", update: {operationId: get_trust_passport, tags: [Verification]}}
+- {target: "$.paths['/v1/warranties/{warranty_id}'].get", update: {operationId: get_warranty, tags: [Verification]}}
+- {target: "$.paths['/v1/trust/jwks.json'].get", update: {operationId: get_trust_jwks, tags: [Verification], 'x-apievangelist-observed': '503 {"error": "passport verification key unavailable"} on 2026-09-19 (contract declares 200 only)'}}
+- {target: "$.paths['/v1/projects/{project_id}'].get", update: {operationId: get_project, tags: [Private]}}
+- {target: "$.paths['/v1/projects/{project_id}/messages'].post", update: {operationId: post_project_message, tags: [Private]}}
+- {target: "$.paths['/v1/jobs/{job_id}'].get", update: {operationId: get_job, tags: [Private]}}
+- {target: "$.paths['/v1/trust-preflight'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/agent-card-lint'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/receipt-verifier'].post", update: {tags: [Paid Jobs], 'x-apievangelist-observed': 'empty body -> 402 with Payment-Required header; quoted_usdc 1.0, chain_id 8453, recipient 0xb747D079416A84d7F35e686Ea4a4252aacBEA0F3'}}
+- {target: "$.paths['/v1/data-distill'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/agent-risk-scan'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/agent-audit'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/agent-security-test'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/research-brief'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/monitor'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/integration-warranty-7d'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/mcp-compatibility'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/openapi-repair'].post", update: {tags: [Paid Jobs]}}
+- {target: "$.paths['/v1/agent-contract'].post", update: {tags: [Paid Jobs]}}

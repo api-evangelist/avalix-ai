@@ -1,0 +1,101 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/avalix-ai-openapi.json
+docs:
+- https://avalix.ai/autonoma/agents
+- https://avalix.ai/autonoma/v1/offers
+- https://avalix.ai/autonoma/.well-known/x402-services.json
+summary: >-
+  The Autonoma contract declares ONE component schema (PaymentRequired), so the entity graph below is
+  derived from path identifiers, request bodies, the live catalog responses and the published sample
+  reports — not from $ref links, of which there is one. Entities are named by the identifier the contract
+  uses; relationships are stated only where a path or body field carries the foreign key. Where a shape was
+  only observed live (Offer, Capability, HealthReport), the observed fields are listed and marked so.
+entities:
+- name: Offer
+  id_field: slug
+  source: 'GET /v1/offers (observed live); /.well-known/agent.json services[]'
+  fields: [slug, name, description, price_usdc, status, jobs_completed, gross_revenue_usdc, direct_cost_usdc, ranking_score, ranking_basis]
+  observed: true
+- name: X402Service
+  id_field: id
+  source: plans/avalix-ai-x402-services.json (served at /autonoma/.well-known/x402-services.json)
+  fields: [id, name, description, method, url, upstream_relay, 'price {amount, currency, network}', input_schema, output_schema, example_request, 'free_sample | free_preview', data_policy]
+  observed: true
+- name: Capability
+  id_field: id
+  source: 'GET /v1/tasks/capabilities (observed live)'
+  fields: [id, name, 'examples[]']
+  observed: true
+- name: Quote
+  id_field: quote token (bearer)
+  source: 'POST /v1/tasks/quote (201 "Quote or policy decline"); MCP quote_task inputSchema'
+  fields: [request, target_scope, authorization_attestation, 'deliverables[]']
+  note: The quote token issued here is the credential for card-intake, accept, usdt-accept and the Robinhood intents; quotes expire after 24 hours.
+- name: PaymentIntent
+  id_field: not declared
+  source: 'POST /v1/tasks/robinhood-eth-intent (201 "Price-locked payment intent")'
+  fields: [exact ETH amount, ten-minute validity]
+- name: Job
+  id_field: job_id (uuid)
+  source: 'GET /v1/jobs/{job_id}; every paid /v1/* route answers 202 "Paid job accepted"'
+  fields: [job state, result]
+  note: Read under the report token; the job is the unit every x402-paid service creates.
+- name: Project
+  id_field: project_id
+  source: 'GET /v1/projects/{project_id}, POST /v1/projects/{project_id}/messages'
+  fields: [thread, artifacts, approvals, billing records, runs, messages]
+  note: The private customer workspace for quoted tasks; the message thread is also the cancellation channel.
+- name: TrustPassport
+  id_field: passport_id
+  source: 'trust_preflight (202) -> GET /v1/trust/passports/{passport_id}; GET /v1/trust/jwks.json'
+  fields: [signed passport, short-lived validity, evidence]
+  note: 'Public, signed, verifiable against the JWKS route (503 "passport verification key unavailable" at probe time).'
+- name: Warranty
+  id_field: warranty_id
+  source: 'integration_warranty_7d (202) -> GET /v1/warranties/{warranty_id}'
+  fields: [signed warranty record, latest evidence, 15-minute checks over 7 days]
+- name: PaymentRequired
+  id_field: none
+  source: '#/components/schemas/PaymentRequired (the only declared schema)'
+  fields: ['status (const payment_required)', quoted_usdc, 'network (const base)', 'chain_id (const 8453)', 'asset (const USDC)', asset_contract, recipient, payment_uri, submit]
+  observed: true
+- name: ReceiptReport
+  id_field: none
+  source: 'GET /v1/samples/receipt-verifier (published sample of receipt_verifier output)'
+  fields: [schema commerce_receipt, reviewable, 'summary {checks_passed, checks_total, missing}', 'checks[] {field, present, matched_key, named_unchecked, satisfied}', 'missing_fields[]', 'limitations[]']
+  observed: true
+- name: AgentCardLintReport
+  id_field: none
+  source: 'GET /v1/samples/agent-card-lint (published sample of agent_card_lint / x402 agent-card-linter output)'
+  fields: ['summary {checks_passed, checks_total, findings}', 'checks[] {check, passed, detail}', 'findings[] {severity, finding}', 'limitations[]']
+  observed: true
+- name: HealthReport
+  id_field: none
+  source: 'GET /health (observed live)'
+  fields: [healthy, core_healthy, commercial_healthy, 'degraded_connectors[]', 'connectors[] {connector, status, detail, checked_at}']
+  observed: true
+relationships:
+- {from: Offer, to: Job, type: has_many, via: 'offer_slug (MCP request_service) / the matching POST /v1/* route'}
+- {from: X402Service, to: Offer, type: belongs_to, via: 'public_slug -> x402 route; upstream_relay names the PayanAgent offer_id'}
+- {from: Quote, to: Capability, type: belongs_to, via: 'classification of request against the capability list (server-side)'}
+- {from: Quote, to: Project, type: has_one, via: 'acceptance (accept | card-intake | usdt-accept | robinhood-eth-accept) opens the private project'}
+- {from: Quote, to: PaymentIntent, type: has_one, via: 'POST /v1/tasks/robinhood-eth-intent under the quote token'}
+- {from: Project, to: Job, type: has_many, via: 'runs / billing records (declared in the GET /v1/projects/{project_id} summary)'}
+- {from: Job, to: TrustPassport, type: has_one, via: 'trust_preflight job -> passport_id'}
+- {from: Job, to: Warranty, type: has_one, via: 'integration_warranty_7d job -> warranty_id'}
+- {from: Job, to: PaymentRequired, type: has_one, via: 'the 402 challenge that precedes the 202 (quoted_usdc, recipient)'}
+- {from: Job, to: ReceiptReport, type: has_one, via: 'receipt_verifier result'}
+- {from: Job, to: AgentCardLintReport, type: has_one, via: 'agent_card_lint / x402 agent-card-linter result'}
+id_conventions:
+  job_id: uuid (declared format)
+  passport_id: opaque string
+  warranty_id: opaque string
+  project_id: opaque string
+  offer slugs: kebab-case (mcp-compatibility, openapi-repair, agent-contract, receipt-verifier, custom-task-25/49/99, integration-warranty-7d)
+  x402 service ids: autonoma-<product>
+schema_coverage:
+  declared_schemas: 1
+  declared_request_bodies_with_shape: 4
+  operations: 33
+  note: 26 of 33 operations have no response schema; 13 paid routes declare an open object requestBody. The data model above is therefore mostly inferred from identifiers and live observation, and is marked as such per entity.

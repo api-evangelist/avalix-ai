@@ -1,0 +1,29 @@
+generated: '2026-09-19'
+method: generated
+source: >-
+  openapi/avalix-ai-openapi.json (all operationIds verified against the spec; routes the provider declares
+  without an operationId are named by method + path) plus the provider's agents page, llms.txt, /autonoma/
+  and services pages, the live GET /v1/offers and the two published sample reports. Avalix publishes no
+  skills or AGENTS.md of its own (probed 2026-09-19); its llms.txt is saved verbatim under llms/.
+skills:
+- file: avalix-ai-free-check-then-paid-lint.md
+  name: avalix-ai-free-check-then-paid-lint
+  method: generated
+  description: Rehearse a card, MCP manifest or OpenAPI on the free checks, then buy the paid lint or repair through x402 and read the job.
+  operations: 4
+  operation_ids: [agent_card_lint, mcp_compatibility, openapi_repair, receipt_verifier]
+  routes: ['POST /v1/trust/preview', 'GET /v1/offers', 'GET /v1/samples/agent-card-lint', 'GET /v1/samples/receipt-verifier', 'GET /v1/jobs/{job_id}']
+- file: avalix-ai-quote-and-commission-task.md
+  name: avalix-ai-quote-and-commission-task
+  method: generated
+  description: Get a fixed-price quote for one bounded task, accept it on the rail you hold, and follow the private project thread including the cancellation path.
+  operations: 9
+  operation_ids: []
+  routes: ['GET /v1/tasks/capabilities', 'POST /v1/tasks/quote', 'POST /v1/tasks/accept', 'POST /v1/tasks/usdt-accept', 'POST /v1/tasks/robinhood-eth-intent', 'POST /v1/tasks/robinhood-eth-accept', 'POST /v1/tasks/card-intake', 'GET /v1/projects/{project_id}', 'POST /v1/projects/{project_id}/messages']
+- file: avalix-ai-integration-warranty.md
+  name: avalix-ai-integration-warranty
+  method: generated
+  description: Buy the signed seven-day availability warranty for one authorized endpoint and verify it publicly.
+  operations: 3
+  operation_ids: [integration_warranty_7d, monitor]
+  routes: ['GET /v1/warranties/{warranty_id}', 'GET /v1/offers', 'GET /v1/trust/jwks.json']

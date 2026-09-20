@@ -1,0 +1,157 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the named /.well-known/* path list on avalix.ai, www.avalix.ai and api.avalix.ai, plus
+  the /autonoma/ sub-root that hosts the OpenAPI servers[] base, the MCP server and the A2A endpoint,
+  2026-09-19. Every row below is a request that was actually issued; every status is the one returned.
+summary:
+  hosts_probed: 3
+  paths_probed: 66
+  documents_served: 3
+  hit_count: 3
+  path_echo_control: passed
+  note: >-
+    Avalix serves three well-known documents on the apex: the A2A agent card at /.well-known/agent-card.json
+    (graded in a2a/), a services manifest at the legacy /.well-known/agent.json path (200 application/json,
+    but NOT an A2A card — recorded here, not in a2a/), and an RFC 9116 security.txt with Contact, Canonical,
+    Preferred-Languages and Expires (2027-07-19) but no Policy line. Every other named path returns the Next.js
+    site's real 404 (HTML shell, HTTP 404 — the status is honest even though the body is HTML), and a
+    negative-control path that cannot exist also 404s on all three hosts, so the 200s are served documents.
+    No OAuth/OIDC discovery, no RFC 9727 API catalog, no APIs.json, no AAuth resource document, no ai-plugin,
+    no UCP/ACP manifest, no MCP server card. www.avalix.ai is a second full origin (not a redirect) that
+    serves the agent card but NOT security.txt. api.avalix.ai is a wildcard that serves the marketing site
+    and none of the documents. The MCP server host is the apex itself (https://avalix.ai/autonoma/mcp), so
+    the RFC 9728 protected-resource probe on the MCP host is the apex row below (404) and the sub-root row
+    (JSON 404). One provider-specific machine-readable manifest is served under the sub-root:
+    /autonoma/.well-known/x402-services.json (x402Version 2, three priced resources) — saved to
+    plans/avalix-ai-x402-services.json because it is a price catalog, not a discovery standard.
+hosts:
+- host: avalix.ai
+  role: Website, API (OpenAPI servers[] https://avalix.ai/autonoma), MCP server and A2A JSON-RPC host — one origin
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    bytes: 3598
+    file: ../a2a/avalix-ai-agent-card.json
+    standard: A2A Agent Card (protocolVersion 1.0.0)
+    note: Saved verbatim under a2a/ and graded conformant in a2a/avalix-ai-a2a.yml.
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    bytes: 3837
+    file: avalix-ai-agent.json
+    standard: none — provider-specific services manifest
+    note: >-
+      Legacy pre-0.3 agent-card path, but the body is not an agent card: {name, type "disclosed autonomous
+      AI", owner, base_url, network base, asset USDC, treasury_address, demo_url, openapi_url, llms_txt_url,
+      services[8] with price_usdc and status}. Saved verbatim; counted as a served document, not as an
+      A2A card.
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    bytes: 146
+    file: avalix-ai-security.txt
+    standard: RFC 9116
+    fields: {Contact: 'mailto:support@avalix.ai', Canonical: 'https://avalix.ai/.well-known/security.txt', Preferred-Languages: en, Expires: '2027-07-19T00:00:00.000Z'}
+    note: No Policy, Acknowledgments, Encryption or Hiring line; the file is not signed.
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: This is also the MCP resource host (https://avalix.ai/autonoma/mcp); no RFC 9728 metadata is served for it.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /llms.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    bytes: 2095
+    file: ../llms/avalix-ai-llms.txt
+    standard: llms.txt
+    note: Saved verbatim under llms/. Byte-identical copy at /autonoma/llms.txt.
+  - path: /.well-known/avalix-ai-negative-control-9c2f7a1e.json
+    status: 404
+    control: negative
+    note: A path that cannot exist. Its 404 proves the host does not echo or catch-all /.well-known/* requests.
+  sub_root:
+    base: https://avalix.ai/autonoma
+    role: 'OpenAPI servers[] base, MCP endpoint (/mcp) and A2A endpoint (/a2a/v1); answers its own JSON 404 ({"error": "not found"}, 22 bytes)'
+    documents:
+    - {path: /autonoma/.well-known/agent-card.json, status: 200, note: byte-identical to the apex card}
+    - {path: /autonoma/.well-known/x402-services.json, status: 200, content_type: application/json, bytes: 7661, file: ../plans/avalix-ai-x402-services.json, standard: 'x402 discovery manifest (x402Version 2)'}
+    - {path: /autonoma/.well-known/oauth-protected-resource, status: 404, note: 'JSON 404; the MCP resource has no RFC 9728 metadata'}
+    - {path: /autonoma/.well-known/oauth-authorization-server, status: 404}
+    - {path: /autonoma/.well-known/security.txt, status: 404}
+    - {path: /autonoma/.well-known/apis.json, status: 404}
+    - {path: /autonoma/apis.json, status: 404}
+    - {path: /autonoma/.well-known/mcp.json, status: 404}
+    - {path: /autonoma/.well-known/ucp.json, status: 404}
+    - {path: /autonoma/.well-known/aauth-resource.json, status: 404}
+    - {path: /autonoma/llms.txt, status: 200, note: byte-identical to /llms.txt}
+    - {path: /autonoma/openapi.json, status: 200, note: 'byte-identical to /openapi.json; saved as openapi/avalix-ai-openapi.json'}
+    - {path: /autonoma/.well-known/avalix-ai-negative-control-9c2f7a1e.json, status: 404, control: negative}
+- host: www.avalix.ai
+  role: Second full origin of the same Next.js site (200, not a redirect); serves the agent card and nothing else
+  documents:
+  - {path: /.well-known/agent-card.json, status: 200, content_type: application/json, bytes: 3598, file: ../a2a/avalix-ai-agent-card.json, note: byte-identical to the apex card}
+  - {path: /.well-known/security.txt, status: 404, note: "Not served on www; the apex file's Canonical line names the apex only, which is consistent."}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/api-catalog.json, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/ucp.json, status: 404}
+  - {path: /.well-known/acp.json, status: 404}
+  - {path: /.well-known/aauth-resource.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /apis.yml, status: 404}
+  - {path: /.well-known/avalix-ai-negative-control-9c2f7a1e.json, status: 404, control: negative}
+- host: api.avalix.ai
+  role: Wildcard DNS (Cloudflare) that serves the marketing site; NOT an API host — no document is served here
+  documents:
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /openapi.json, status: 404}
+  - {path: /mcp, status: 404}
+robots_txt:
+  url: https://avalix.ai/robots.txt
+  status: 200
+  body: "User-agent: *\nAllow: /\n\nSitemap: https://avalix.ai/sitemap.xml"
+  note: Everything is crawlable; no AI-crawler groups. The sitemap lists eleven marketing pages and none of the /autonoma/ surface.
+hosts_not_resolving:
+- mcp.avalix.ai
+- docs.avalix.ai
+- status.avalix.ai
+- trust.avalix.ai
+- security.avalix.ai
+- developers.avalix.ai

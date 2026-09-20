@@ -1,0 +1,58 @@
+generated: '2026-09-19'
+method: searched
+source: https://avalix.ai/autonoma/openapi.json
+derived_from: openapi/avalix-ai-openapi.json
+docs:
+- https://avalix.ai/autonoma/live
+- https://avalix.ai/terms
+versioning:
+  scheme: uri-path (/v1/) for the job, quote and verification routes; unversioned for /health, /ready and the /x402/* relay routes; A2A endpoint versioned as /a2a/v1
+  current_version: v1 (paths) / 1.0.0 (OpenAPI info.version, MCP serverInfo.version and agent card version all agree)
+  spec_url: https://avalix.ai/autonoma/openapi.json
+  base_url: https://avalix.ai/autonoma
+  policy_published: false
+  release_signal: 'GET /ready reports the running release hash (observed "release": "c4394c4", worker cycle_id 186942, worker age 24.6 s on 2026-09-19)'
+  note: >-
+    No versioning policy page exists (/docs, /changelog, /developers all 404 on the apex; docs.avalix.ai
+    does not resolve). The three machine surfaces carry the same 1.0.0. The site-wide Terms are dated
+    ("Last updated: August 2026") and the privacy policy "March 2026"; the sitemap's lastmod for every page
+    is 2026-09-17.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: 'Zero operations carry deprecated: true; no deprecation or sunset policy is published. No Deprecation pointer is emitted.'
+status_page:
+  url: null
+  probed:
+  - {url: 'https://avalix.ai/status', status: 404}
+  - {url: 'https://status.avalix.ai/', status: NXDOMAIN}
+  live_signals:
+  - url: https://avalix.ai/autonoma/health
+    status: 200
+    observed: '{"healthy": false, "core_healthy": true, "commercial_healthy": false, "degraded_connectors": ["a2a-markets", "moltbook", "moltbook_publisher", "x"], "connectors": [...], ...}'
+    note: >-
+      A public, connector-by-connector health document: core API healthy, several outbound sales connectors
+      degraded, each with a checked_at timestamp. It is a live health surface, not a status page — no incident
+      history, no uptime figure, no subscription.
+  - url: https://avalix.ai/autonoma/ready
+    status: 200
+    observed: '{"ready": true, "audit": "audit head consistent", "database": "ok", "worker": {"status": "healthy", "age_seconds": 24.56, "detail": {"cycle_id": 186942, "release": "c4394c4"}}, "release": "c4394c4"}'
+  - url: https://avalix.ai/autonoma/live
+    status: 200
+    note: '"Live Operational Evidence" dashboard — system mode, queue, verified revenue, paid jobs, checkout starts and an audit timeline, rendered client-side from the same JSON. Marketing-adjacent evidence, not an SLA page. No StatusPage pointer is emitted.'
+sla:
+  published: false
+  warranty_product: >-
+    The provider SELLS an availability commitment rather than publishing one for itself: "7-day integration
+    warranty · $49 — a signed acceptance obligation, 15-minute public-endpoint checks, incident evidence, and
+    an approval-gated repair path" (https://avalix.ai/autonoma/services), purchasable at POST
+    /v1/integration-warranty-7d and verifiable at GET /v1/warranties/{warranty_id}. No uptime target is
+    stated for the Autonoma API itself.
+  observed_degradation: 'GET /v1/trust/jwks.json returned 503 {"error": "passport verification key unavailable"} on 2026-09-19; the contract declares only a 200 for that route.'
+changelog:
+  published: false
+  probed: [{url: 'https://avalix.ai/changelog', status: 404}]
+  note: No ChangeLog pointer is emitted. The only dated signals are the release hash in /ready, the sitemap lastmod and the legal-page "Last updated" lines.

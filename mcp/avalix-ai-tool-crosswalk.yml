@@ -1,0 +1,82 @@
+generated: '2026-09-19'
+method: derived
+source: >-
+  Derived by aligning the live MCP tools/list (mcp/avalix-ai-mcp-tools.json, six tools with inputSchema,
+  answered anonymously on 2026-09-19) with the Autonoma Trust Gate OpenAPI 3.1.0
+  (openapi/avalix-ai-openapi.json, 33 paths, 33 operations, of which 13 carry an operationId). Operations
+  the provider left without an operationId are named by method + path.
+purpose: >-
+  Make each MCP tool a first-class discovery unit bound to its backing REST operation so an agent can read
+  the tool's real request contract from the spec. Autonoma's REST, MCP and A2A surfaces are three
+  projections of one job-and-payment core, and no one of them is a superset: REST alone carries the
+  quote-acceptance rails, passports, warranties and jobs; MCP alone carries the free compatibility check;
+  A2A carries the same skills as descriptions with purchase URLs.
+surfaces:
+  rest_openapi: openapi/avalix-ai-openapi.json
+  mcp: https://avalix.ai/autonoma/mcp
+  mcp_gated: false
+  a2a: https://avalix.ai/autonoma/a2a/v1
+  graphql: null
+crosswalk:
+- tool: list_offers
+  category: catalog
+  rest: ['GET /v1/offers']
+  binding: rest
+  confidence: high
+  note: Same eight-offer catalog observed live at both ends (slug, name, price_usdc, status, jobs_completed, ranking_score).
+- tool: task_capabilities
+  category: catalog
+  rest: ['GET /v1/tasks/capabilities']
+  binding: rest
+  confidence: high
+- tool: trust_preview
+  category: free-preview
+  rest: ['POST /v1/trust/preview']
+  binding: rest
+  confidence: high
+  note: The MCP inputSchema is an open object; the REST route rejects a body without an agent_card JSON object (observed 400 "agent_card must be a JSON object").
+- tool: quote_task
+  category: commerce
+  rest: ['POST /v1/tasks/quote']
+  binding: rest
+  confidence: high
+  note: The MCP schema is the richer contract — request, target_scope, authorization_attestation (const true), deliverables — where the OpenAPI declares no requestBody schema for the route.
+- tool: request_service
+  category: commerce
+  rest: [trust_preflight, agent_card_lint, receipt_verifier, data_distill, agent_risk_scan, agent_audit, agent_security_test, research_brief, monitor, integration_warranty_7d, mcp_compatibility, openapi_repair, agent_contract]
+  binding: rest
+  confidence: medium
+  note: >-
+    One tool fans out over the thirteen x402-paid /v1/* routes, selected by offer_slug. The 402 contract is
+    identical on both sides (exact USDC amount, asset contract, recipient, payment_uri, retry with the
+    transaction hash); the REST routes additionally declare the Payment-Required response header. Exact
+    offer_slug-to-route mapping is server-side; the slugs observed in GET /v1/offers (mcp-compatibility,
+    openapi-repair, agent-contract, receipt-verifier, custom-task-25/49/99, integration-warranty-7d) match
+    the route names where a route exists and route to the quote flow where they do not.
+mcp_only:
+- tool: compatibility_check
+  reason: >-
+    Free static MCP/A2A/OpenAPI check with no route in the OpenAPI. Exposed through MCP, as A2A skill
+    compatibility-check, and on the web at https://avalix.ai/autonoma/check; its paid twins are
+    mcp_compatibility, agent_card_lint and openapi_repair.
+rest_only:
+- capability: liveness and readiness
+  operations: ['GET /health', 'GET /ready']
+- capability: free demo
+  operations: ['POST /v1/demo']
+- capability: x402 relay products (PayanAgent-listed)
+  operations: ['POST /x402/agent-card-linter', 'POST /x402/data-validator']
+  note: Reachable as A2A skills; not as MCP tools.
+- capability: quote acceptance and payment rails (bearer quote token)
+  operations: ['POST /v1/tasks/card-intake', 'POST /v1/tasks/accept', 'POST /v1/tasks/usdt-accept', 'POST /v1/tasks/robinhood-eth-intent', 'POST /v1/tasks/robinhood-eth-accept']
+- capability: private project thread (bearer report token)
+  operations: ['GET /v1/projects/{project_id}', 'POST /v1/projects/{project_id}/messages', 'GET /v1/jobs/{job_id}']
+- capability: public verification
+  operations: ['GET /v1/trust/passports/{passport_id}', 'GET /v1/warranties/{warranty_id}', 'GET /v1/trust/jwks.json']
+coverage:
+  mcp_tools: 6
+  mcp_tools_bound: 5
+  mcp_only: 1
+  rest_operations: 33
+  rest_operations_with_tool: 17
+  rest_only: 16

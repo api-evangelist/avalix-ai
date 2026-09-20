@@ -1,0 +1,90 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: https://avalix.ai/privacy
+signals:
+  ai_transparency:
+    url: https://avalix.ai/autonoma/
+    evidence:
+    - source: https://avalix.ai/autonoma/
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: "Autonoma is Avalix's disclosed autonomous AI operator."
+    - source: https://avalix.ai/.well-known/agent.json
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: '"type": "disclosed autonomous AI", "owner": "The legal entity operating avalix.ai"'
+    - source: https://avalix.ai/.well-known/agent-card.json
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: '"A disclosed autonomous service agent that sells trust checks, receipt verification, ..."'
+    - source: https://avalix.ai/faq
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'Q. 07 What models does the agent run on? Anthropic Claude (Opus, Sonnet, Haiku) for most workflows. Opus for the orchestrator brain, Sonnet for execution, Haiku for fast triage and routing.'
+    note: >-
+      A published, repeated disclosure that the counterparty selling and delivering these services is an
+      autonomous AI, carried in the product page, both well-known documents and the MCP initialize
+      instructions ("Avalix-owned service endpoint"), plus a FAQ naming the underlying models. This is the
+      substance of an AI-interaction transparency statement, though there is no dedicated /ai page (/ai and
+      /ai/transparency both 404) and no statement about AI-generated content labelling.
+  data_subject_request:
+    url: https://avalix.ai/privacy
+    section: Data storage
+    channel: email (address rendered client-side on the page; the security.txt Contact is support@avalix.ai)
+    rights_named: [deletion of account and data]
+    stated_sla: null
+    evidence:
+    - source: https://avalix.ai/privacy
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'You can request deletion of your account and data at any time by emailing [address].'
+    note: >-
+      A published deletion channel with no response time and no mention of access, correction or
+      portability; the page is dated "Last updated: March 2026". Thin, but a real, reachable statement of a
+      data-subject right — recorded as such. No request form or API exists (/privacy/requests 404).
+  subprocessors:
+    url: https://avalix.ai/privacy
+    section: Third-party services
+    named: [Stripe (payment processing), Namecheap Private Email (transactional email)]
+    dated: 'Last updated: March 2026'
+    evidence:
+    - source: https://avalix.ai/privacy
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: "We use Stripe for payment processing. Stripe's privacy policy governs how they handle your payment data. We use Namecheap Private Email for transactional emails. No other third-party services have access to your data."
+    note: >-
+      An exhaustive, closed list of the third parties with access to customer data, inside a dated privacy
+      policy — the substance of a subprocessor list, though not a standalone table and with no
+      change-notification commitment. The Autonoma surface additionally names its payment facilitators
+      (PayanAgent, endpoint.farm) and marketplaces in the x402 manifest, and the FAQ says the agent runs on
+      Anthropic Claude, which the privacy policy does not list. Recorded with that gap noted.
+probed_absent:
+- {url: 'https://avalix.ai/accessibility', status: 404}
+- {url: 'https://avalix.ai/accessibility/vpat', status: 404}
+- {url: 'https://avalix.ai/legal/subprocessors', status: 404}
+- {url: 'https://avalix.ai/legal/dpa', status: 404}
+- {url: 'https://avalix.ai/privacy/requests', status: 404}
+- {url: 'https://avalix.ai/transparency', status: 404}
+- {url: 'https://avalix.ai/trust', status: 404}
+- {url: 'https://avalix.ai/security/sbom', status: 404}
+- {url: 'https://avalix.ai/ai', status: 404}
+- {url: 'https://avalix.ai/ai/transparency', status: 404}
+- {url: 'https://avalix.ai/legal/report-content', status: 404}
+- {url: 'https://avalix.ai/docs/data-residency', status: 404}
+not_found:
+  sbom: no SBOM published anywhere probed (never derived)
+  support_lifetime: no support period stated; the /autonoma/ page states only a 7-day warranty product and a 24-hour quote expiry
+  accessibility_conformance: no VPAT or WCAG statement (the provider SELLS accessibility findings in its $49.99 business-scope plan; that is a service, not a conformance report)
+  training_data_summary: none
+  global_privacy_control: no published statement; not probed by header, per the contract
+  data_residency: none stated ("Your account data is stored on our secure server" — no region)
+  incident_notification: none
+  age_assurance: none
+  notice_and_action: none
+  transparency_report: none
+  exit_assistance: 'the FAQ states that on cancellation "You keep access to logs and exported workflow configs" for the AI Employee product — a statement about the managed-service business, not the API; not recorded as a signal because no export mechanism or format is documented'
+note: >-
+  Three signals found, all inside general pages rather than dedicated regulatory surfaces. Everything else
+  is an honest absence. GDPR, SOC 2 and HIPAA are named on the enterprise page only as requirements a
+  custom deployment can be designed around.

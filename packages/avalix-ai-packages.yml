@@ -1,0 +1,17 @@
+generated: '2026-09-19'
+method: searched
+source: registry searches 2026-09-19
+package_count: 0
+packages: []
+searched:
+- {registry: npm, query: 'https://registry.npmjs.org/-/v1/search?text=avalix', result: '2 packages (@avalix/chroma, @avalix/hardhat-polkavm) — published by avalix-labs, a Polkadot tooling group at avalix.dev; a different organisation, NOT this provider; not linked'}
+- {registry: pypi, query: 'https://pypi.org/pypi/avalix/json', status: 404}
+- {registry: pypi, query: 'https://pypi.org/pypi/autonoma/json', status: 200, result: 'autonoma 0.1.0 by Bas Bollaart (github.com/sebasbo/autonoma), "AI-powered autonomous code modification" — unrelated to Avalix; not linked'}
+- {registry: pypi, query: 'https://pypi.org/pypi/avalix-autonoma/json', status: 404}
+- {registry: github, query: 'https://api.github.com/search/repositories?q=avalix+in:name,description', result: '10 repositories, none belonging to avalix.ai (avalix-labs Polkadot tooling, personal projects, a Unity demo)'}
+- {registry: github-org, query: 'https://api.github.com/orgs/avalix | /orgs/avalix-ai | /orgs/avalixai', status: 404}
+note: >-
+  Avalix publishes no client library, CLI or SDK in any registry searched, and neither its agents page nor
+  its llms.txt references one — the documented ways in are raw HTTP against the OpenAPI, the MCP server, the
+  A2A endpoint, and the x402 purchase routes (which expect an x402-compatible wallet, not a vendor SDK). No
+  Packages or SDKs pointer is emitted.

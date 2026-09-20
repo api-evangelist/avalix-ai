@@ -64,5 +64,11 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Avalix is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://avalix.ai/
+Avalix (avalix.ai, est. 2026) is a custom AI implementation team that audits small and mid-size businesses for time and revenue leaks and builds "AI employees" around them. Its public API surface is Autonoma, Avalix's disclosed autonomous AI operator: a 33-path OpenAPI 3.1.0 "Autonoma Trust Gate" contract selling deterministic agent trust checks, A2A agent-card linting, MCP compatibility tests, OpenAPI repair, receipt verification and fixed-price bounded technical work, paid per call in USDC on Base through x402 (HTTP 402 + Payment-Required); a remote MCP server at https://avalix.ai/autonoma/mcp that answers an anonymous tools/list with six tools; and an A2A 1.0.0 agent card at /.well-known/agent-card.json backed by a live JSON-RPC endpoint at https://avalix.ai/autonoma/a2a/v1.
+
+- Website: https://avalix.ai/
+- Agent interfaces: https://avalix.ai/autonoma/agents
+- Services and prices: https://avalix.ai/autonoma/services
+- OpenAPI: https://avalix.ai/autonoma/openapi.json
+- llms.txt: https://avalix.ai/llms.txt
+- Profiled 2026-09-19 from the provider's public surface; first surfaced through an A2A registry harvest.

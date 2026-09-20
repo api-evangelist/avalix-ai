@@ -1,0 +1,88 @@
+generated: '2026-09-19'
+method: searched
+source: https://avalix.ai/.well-known/agent-card.json
+derived_from: openapi/avalix-ai-openapi.json
+docs:
+- https://avalix.ai/autonoma/agents
+- https://avalix.ai/llms.txt
+- https://avalix.ai/enterprise
+summary: >-
+  Avalix's conformance profile is the agent-commerce protocol stack rather than any enterprise or sector
+  standard: an A2A 1.0.0 agent card graded conformant, an MCP server at protocol version 2025-11-25,
+  JSON-RPC 2.0 on both, an x402 discovery manifest at x402Version 2 with the "exact" scheme on
+  eip155:8453 (CAIP-2) and live HTTP 402 challenges carrying a Payment-Required header, EIP-681 payment
+  URIs, a JWKS route for Trust Passport verification (503 at probe time), an RFC 9116 security.txt and an
+  llms.txt. It declares no OAuth/OIDC, no RFC 9457 problem details, no RFC 9727 API catalog, no RFC 8594
+  sunset signalling and no idempotency mechanism. The enterprise page offers "SOC 2 / HIPAA friendly
+  designs" for custom deployments — a design posture, not a certification — so no Compliance pointer is
+  emitted.
+standards:
+- id: a2a
+  name: Agent2Agent protocol
+  version: '1.0.0'
+  conforms: true
+  evidence: 'a2a/avalix-ai-agent-card.json — protocolVersion "1.0.0", url https://avalix.ai/autonoma/a2a/v1, preferredTransport JSONRPC, capabilities object, skills[] of 6, defaultInput/OutputModes declared; POST https://avalix.ai/autonoma/a2a/v1 tasks/get answered A2A error -32001 Task not found. Graded conformant in a2a/avalix-ai-a2a.yml.'
+- id: mcp
+  name: Model Context Protocol
+  version: '2025-11-25'
+  conforms: true
+  evidence: 'POST https://avalix.ai/autonoma/mcp initialize returned protocolVersion "2025-11-25", serverInfo {ai.avalix/autonoma, 1.0.0}, capabilities.tools.listChanged false; tools/list returned 6 tools with inputSchema. See mcp/avalix-ai-mcp.yml.'
+- id: json-rpc-2.0
+  conforms: true
+  evidence: 'Both /autonoma/mcp and /autonoma/a2a/v1 answer {"jsonrpc":"2.0", ...} with standard -32601 Method not found for unimplemented methods.'
+- id: x402
+  name: x402 HTTP payment protocol
+  version: 'x402Version 2 (manifest)'
+  conforms: true
+  verification: observed
+  evidence: 'https://avalix.ai/autonoma/.well-known/x402-services.json declares x402Version 2 with accepts[] {scheme exact, network eip155:8453, asset 0x8335…2913, payTo 0xb747…0F3, maxTimeoutSeconds 60} per resource; POST https://avalix.ai/autonoma/v1/receipt-verifier {} returned HTTP 402 with a Payment-Required header and a JSON body naming quoted_usdc 1.0, chain_id 8453, asset_contract, recipient and payment_uri; the OpenAPI declares the 402 + Payment-Required header on all thirteen paid /v1/* routes and the PaymentRequired schema.'
+  domain_standard_signature: true
+  note: 'The contract itself carries the signature — a PaymentRequired component schema with const network "base" / chain_id 8453 / asset "USDC" and a declared Payment-Required response header — which is the contract-level marker for agent commerce this market has. The live body uses scheme "onchain" and a transaction-hash retry, so this is x402-shaped settlement with a provider-specific proof step rather than a facilitator-verified x402 exact payload; recorded as observed, not certified.'
+- id: caip-2
+  name: Chain Agnostic Improvement Proposal 2 chain ids
+  conforms: true
+  evidence: 'network "eip155:8453" throughout the x402 manifest; chain_id 8453 in the 402 body.'
+- id: eip-681
+  name: Ethereum payment request URI
+  conforms: true
+  evidence: 'payment_uri "ethereum:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913@8453/transfer?address=0xb747…&uint256=1000000" in the observed 402 body — the ERC-20 transfer form of EIP-681.'
+- id: rfc7517-jwks
+  name: JSON Web Key Set
+  conforms: true
+  verification: declared
+  evidence: 'GET /v1/trust/jwks.json declared ("Retrieve Trust Passport verification keys"); live probe on 2026-09-19 returned 503 {"error": "passport verification key unavailable"}, so the key set itself was not observed.'
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: 'https://avalix.ai/.well-known/security.txt — Contact, Canonical, Preferred-Languages, Expires 2027-07-19; no Policy line; unsigned.'
+- id: llms-txt
+  conforms: true
+  evidence: 'https://avalix.ai/llms.txt (and /autonoma/llms.txt) — H1, summary paragraph, link list to OpenAPI, x402 manifest, agent card, free demo and marketplace listings.'
+- id: openapi-3.1
+  conforms: true
+  evidence: 'openapi "3.1.0" at https://avalix.ai/autonoma/openapi.json; 33 paths; 13 of 33 operations carry an operationId; one securityScheme (reportToken, http bearer); one component schema.'
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 or openIdConnect securityScheme; /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource 404 on every host and under /autonoma/.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration 404.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'Errors are {"error": string}; no application/problem+json anywhere in the spec or live.'
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog 404 on every host.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: No Sunset or Deprecation header declared; no deprecated operations.
+- id: idempotency-key
+  conforms: false
+  evidence: No Idempotency-Key header or parameter on any of the 24 write operations; llms.txt and the agents page document none.
+- id: a2a-x402-extension
+  conforms: false
+  evidence: capabilities.extensions is an empty array; payment is by x402 over the REST routes named in skill descriptions, not through a declared A2A extension URI.
+compliance_claims:
+- claim: '"SOC 2 / HIPAA friendly designs" and "Compliance requirements (SOC 2, HIPAA, financial industry, GDPR)" as reasons to contact the enterprise team'
+  source: https://avalix.ai/enterprise
+  certification: none published
+  note: A statement about what custom deployments can be designed for, not an attestation Avalix holds; no trust center, report or auditor is named (probe-security-programs.py found no trust center). No Compliance pointer is emitted.

@@ -1,0 +1,77 @@
+generated: '2026-09-19'
+method: derived
+format: json-error-object
+source: openapi/avalix-ai-openapi.json
+docs:
+- https://avalix.ai/llms.txt
+- https://avalix.ai/autonoma/agents
+summary: >-
+  The Autonoma contract declares 4xx/5xx responses by description only — no error schema, no
+  application/problem+json, no error code enumeration. Live responses use a flat {"error": "<message>"}
+  JSON object (observed: 400 {"error": "agent_card must be a JSON object"}, 400 {"error": "Invalid offer
+  ID"}, 404 {"error": "not found"}, 503 {"error": "passport verification key unavailable"}). The one
+  structured error is the x402 challenge: HTTP 402 with a Payment-Required header and a PaymentRequired JSON
+  body (status "payment_required", quoted_usdc, network, chain_id, asset, asset_contract, recipient,
+  payment_uri, submit). JSON-RPC 2.0 error objects are used on /mcp and /a2a/v1 (-32601 Method not found,
+  -32001 Task not found).
+envelope:
+  rest: '{"error": string}'
+  x402: 'HTTP 402 + Payment-Required header + PaymentRequired object (components.schemas.PaymentRequired)'
+  json_rpc: '{"jsonrpc": "2.0", "id": ..., "error": {"code": int, "message": string}}'
+  rfc9457: false
+problems:
+- status: 400
+  title: Invalid input
+  applies_to: ['POST /v1/demo', 'POST /v1/trust/preview']
+  observed: '{"error": "agent_card must be a JSON object"} on /v1/trust/preview with an empty body'
+  remediation: Send the required JSON object (text for the demo; agent_card object for the preview) within the declared size limits.
+- status: 400
+  title: Invalid request
+  applies_to: ['POST /v1/tasks/quote']
+  remediation: Supply request, target_scope and authorization_attestation true (the MCP quote_task schema is the fuller contract).
+- status: 400
+  title: Invalid input or payment proof
+  applies_to: [trust_preflight, agent_card_lint, receipt_verifier, data_distill, agent_risk_scan, agent_audit, agent_security_test, research_brief, monitor, integration_warranty_7d, mcp_compatibility, openapi_repair, agent_contract]
+  remediation: 'The retry after a 402 carries a Payment-Signature that the server could not verify, or the payload is malformed. "A Payment-Signature is not a pasted transaction hash." Re-issue from an x402-compatible wallet against the exact amount, contract, recipient and network in the challenge.'
+- status: 400
+  title: Invalid offer ID
+  applies_to: ['POST /x402/data-validator']
+  observed: '{"error":"Invalid offer ID"} — returned on 2026-09-19 with a valid-shaped body, i.e. the relay route currently rejects before issuing its 402'
+  note: Recorded as observed; the x402-services manifest still lists the route as live with a PayanAgent upstream_relay.
+- status: 400
+  title: Invalid token, network, amount, recipient, payer, or confirmations
+  applies_to: ['POST /v1/tasks/usdt-accept']
+- status: 400
+  title: Rail unavailable or quote inactive
+  applies_to: ['POST /v1/tasks/robinhood-eth-intent']
+- status: 400
+  title: Invalid, expired, or insufficiently confirmed payment
+  applies_to: ['POST /v1/tasks/robinhood-eth-accept']
+- status: 401
+  title: Invalid project token / Invalid quote token / Missing or invalid report token
+  applies_to: ['GET /v1/projects/{project_id}', 'POST /v1/tasks/card-intake', 'POST /v1/tasks/accept', 'GET /v1/jobs/{job_id}']
+  remediation: Present the bearer token issued with the quote (quote token) or with the accepted job (report token) in Authorization; the securityScheme is reportToken (http bearer).
+- status: 402
+  title: Payment required
+  type: x402
+  applies_to: [trust_preflight, agent_card_lint, receipt_verifier, data_distill, agent_risk_scan, agent_audit, agent_security_test, research_brief, monitor, integration_warranty_7d, mcp_compatibility, openapi_repair, agent_contract, 'POST /x402/agent-card-linter', 'POST /x402/data-validator']
+  headers: [Payment-Required]
+  body_schema: '#/components/schemas/PaymentRequired'
+  observed: 'POST /v1/receipt-verifier {} -> 402; body {"offer_slug": "receipt-verifier", "status": "payment_required", "quoted_usdc": 1.0, "scheme": "onchain", "network": "base", "chain_id": 8453, "asset": "USDC", "asset_contract": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "amount": 1.0, "recipient": "0xb747D079416A84d7F35e686Ea4a4252aacBEA0F3", "payment_uri": "ethereum:0x833589...@8453/transfer?address=0xb747...&uint256=1000000", "submit": "Payment-Signature: <Base transaction hash>"}; the same JSON is repeated in the Payment-Required header.'
+  remediation: 'Not an error to surface to a human: pay the exact amount on Base and retry the same POST with Payment-Signature. Observed body carries scheme "onchain" and a transaction-hash submit instruction, while llms.txt says "A Payment-Signature is not a pasted transaction hash" — treat the header/body of the live challenge as authoritative.'
+- status: 404
+  title: Unknown passport / Unknown warranty / Unknown job
+  applies_to: ['GET /v1/trust/passports/{passport_id}', 'GET /v1/warranties/{warranty_id}', 'GET /v1/jobs/{job_id}']
+  observed: '{"error": "not found"} for an unrouted path under /autonoma/'
+- status: 503
+  title: Not ready
+  applies_to: ['GET /ready']
+  observed: 'GET /v1/trust/jwks.json returned 503 {"error": "passport verification key unavailable"} on 2026-09-19 although the contract declares only 200 for that route.'
+  remediation: Retry later; a Trust Passport cannot be verified offline while the JWKS is unavailable.
+json_rpc_errors:
+- {code: -32601, message: Method not found, observed_on: ['https://avalix.ai/autonoma/mcp resources/list', 'https://avalix.ai/autonoma/mcp prompts/list', 'https://avalix.ai/autonoma/a2a/v1 agent/getAuthenticatedExtendedCard']}
+- {code: -32001, message: Task not found, observed_on: ['https://avalix.ai/autonoma/a2a/v1 tasks/get'], standard: A2A TaskNotFoundError}
+gaps:
+- No error schema in the OpenAPI; every 4xx/5xx is description-only.
+- No machine-readable error code beyond the HTTP status; agents must match on message text.
+- No Retry-After or rate-limit exhaustion response is declared.

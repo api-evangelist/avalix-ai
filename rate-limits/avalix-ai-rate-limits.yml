@@ -1,0 +1,38 @@
+generated: '2026-09-19'
+method: searched
+source: https://avalix.ai/autonoma/openapi.json
+docs:
+- https://avalix.ai/autonoma/agents
+- https://avalix.ai/.well-known/agent-card.json
+- https://avalix.ai/autonoma/.well-known/x402-services.json
+limit_count: 0
+summary: >-
+  Avalix publishes no request-rate limit for the Autonoma API — no requests-per-window number, no
+  X-RateLimit-*/RateLimit-* headers in the OpenAPI, and none observed live. The only rate-limit signal is a
+  tag: the A2A card marks the free Trust Preview skill "rate-limited" without a number. Twelve rapid
+  unauthenticated POSTs to /v1/trust/preview on 2026-09-19 all answered 400 with no rate-limit or
+  Retry-After header, so the exhaustion behaviour could not be observed either. What the provider DOES
+  publish are input-size ceilings and payment time windows, recorded below as size_and_time_limits rather
+  than counted as rate limits.
+rate_limits: []
+signals_without_numbers:
+- surface: A2A skill trust-preview
+  tag: rate-limited
+  source: a2a/avalix-ai-agent-card.json skills[1].tags
+  note: A free, no-wallet endpoint that the provider says it throttles; the threshold, window and exhaustion status are not published.
+size_and_time_limits:
+- {name: Demo text, limit: 500 characters, applies_to: 'POST /v1/demo text', source: 'openapi requestBody maxLength; live response limits.characters'}
+- {name: Demo fields, limit: 5, applies_to: 'POST /v1/demo fields', source: 'openapi requestBody maxItems; live response limits.fields'}
+- {name: Data-validator text, limit: 10000 characters, applies_to: 'POST /x402/data-validator text', source: openapi requestBody maxLength}
+- {name: Data-validator fields, limit: 25, applies_to: 'POST /x402/data-validator fields', source: openapi requestBody maxItems}
+- {name: Quote request, limit: 12000 characters, applies_to: 'MCP quote_task request; POST /v1/tasks/quote', source: mcp/avalix-ai-mcp-tools.json quote_task inputSchema}
+- {name: Quote target scope, limit: 2000 characters, applies_to: 'MCP quote_task target_scope', source: mcp/avalix-ai-mcp-tools.json}
+- {name: Quote deliverables, limit: 10, applies_to: 'MCP quote_task deliverables', source: mcp/avalix-ai-mcp-tools.json}
+- {name: x402 payment timeout, limit: 60 seconds (maxTimeoutSeconds), applies_to: 'every x402 accepts[] entry', source: plans/avalix-ai-x402-services.json}
+- {name: Quote validity, limit: 24 hours, applies_to: fixed-scope quotes, source: 'https://avalix.ai/autonoma/ — "Quotes expire after 24 hours."'}
+- {name: Robinhood Chain ETH intent, limit: 10 minutes, applies_to: 'POST /v1/tasks/robinhood-eth-intent', source: 'openapi summary — "ten-minute exact-amount ETH payment intent"'}
+- {name: Warranty check cadence, limit: every 15 minutes for 7 days, applies_to: 'POST /v1/integration-warranty-7d', source: 'https://avalix.ai/autonoma/services — "15-minute public-endpoint checks"'}
+exhaustion:
+  status: unpublished
+  headers: []
+  note: Not declared in the contract, not documented on the agents page, not observed in 12 rapid requests.

@@ -1,0 +1,12 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/avalix-ai-openapi.json
+summary:
+  types:
+  - http
+schemes:
+- name: reportToken
+  type: http
+  scheme: bearer
+  sources:
+  - openapi/avalix-ai-openapi.json
