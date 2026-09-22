@@ -24,7 +24,7 @@ created: '2026-09-19'
 modified: '2026-09-19'
 tags:
 - Agents
-- Agent Commerce
+- Agentic Commerce
 - A2A
 - MCP
 - x402
@@ -46,6 +46,7 @@ tags_raw:
 - AI implementation
 - Custom AI
 - Agent-native
+- Agent Commerce
 apis:
 - aid: avalix-ai:autonoma-trust-gate-api
   name: Autonoma Trust Gate API
@@ -64,6 +65,12 @@ apis:
   humanURL: https://avalix.ai/autonoma/agents
   baseURL: https://avalix.ai/autonoma
   tags:
+  - Agents
+  - Agentic Commerce
+  - x402
+  - AI Trust
+  - Data Validation
+  tags_raw:
   - Agents
   - Agent Commerce
   - x402
@@ -94,6 +101,10 @@ apis:
   humanURL: https://avalix.ai/autonoma/agents
   baseURL: https://avalix.ai/autonoma/mcp
   tags:
+  - MCP
+  - agent-native
+  - Agentic Commerce
+  tags_raw:
   - MCP
   - agent-native
   - Agent Commerce
