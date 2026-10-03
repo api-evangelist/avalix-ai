@@ -1,7 +1,7 @@
 {
   "provider": "avalix-ai",
   "sources": [
-    "avalix-ai-openapi.json"
+    "_original/avalix-ai-openapi.json"
   ],
   "outputs": [
     "avalix-ai-agent-audit-api-openapi.yml",
@@ -28,12 +28,11 @@
     "avalix-ai-warranties-api-openapi.yml",
     "avalix-ai-x402-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/avalix-ai-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "avalix-ai-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "avalix-ai-openapi.json: tagged paths GET /health -> Health",
     "avalix-ai-openapi.json: tagged paths GET /ready -> Ready",
@@ -91,7 +90,31 @@
     "avalix-ai-openapi.json: declared missing tag: Trust Preflight",
     "avalix-ai-openapi.json: declared missing tag: Warranties",
     "avalix-ai-openapi.json: declared missing tag: X402",
-    "apis.yml register: written (+23 apis, 25 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "avalix-ai-agent-audit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-agent-card-lint-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-agent-contract-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-agent-risk-scan-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-agent-security-test-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-data-distill-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-demo-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-health-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-integration-warranty-7d-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-jobs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-mcp-compatibility-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-monitor-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-offers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-openapi-repair-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-ready-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-receipt-verifier-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-research-brief-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-trust-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-trust-preflight-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-warranties-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avalix-ai-x402-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
