@@ -237,6 +237,8 @@ apis:
   humanURL: https://avalix.ai/autonoma/agents
   baseURL: https://avalix.ai/autonoma
   tags:
+  - Job
+  tags_raw:
   - Jobs
   properties:
   - type: OpenAPI
@@ -265,6 +267,8 @@ apis:
   humanURL: https://avalix.ai/autonoma/agents
   baseURL: https://avalix.ai/autonoma
   tags:
+  - Monitors
+  tags_raw:
   - Monitor
   properties:
   - type: OpenAPI
@@ -307,6 +311,8 @@ apis:
   humanURL: https://avalix.ai/autonoma/agents
   baseURL: https://avalix.ai/autonoma
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -363,6 +369,8 @@ apis:
   humanURL: https://avalix.ai/autonoma/agents
   baseURL: https://avalix.ai/autonoma
   tags:
+  - Task
+  tags_raw:
   - Tasks
   properties:
   - type: OpenAPI
@@ -419,6 +427,8 @@ apis:
   humanURL: https://avalix.ai/autonoma/agents
   baseURL: https://avalix.ai/autonoma
   tags:
+  - x402
+  tags_raw:
   - X402
   properties:
   - type: OpenAPI
@@ -433,6 +443,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/avalix-ai-capability-edges.yml
+  name: Avalix Business Capability Map
 - type: Overlay
   url: overlays/avalix-ai-openapi-overlay.yaml
 - type: AgenticAccess
