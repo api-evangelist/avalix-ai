@@ -1,0 +1,12 @@
+{
+ "url": "https://avalix.ai/openapi.json",
+ "requested_url": "https://avalix.ai/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 17991,
+ "sha256": "7f1aeb21aff28f0ee1a652ab3e2bded1130a0e5cf79ff69b8a8c54245d7c7f51",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
