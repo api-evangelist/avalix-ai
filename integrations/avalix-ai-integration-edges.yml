@@ -14,7 +14,7 @@ edges:
     registered_name: io.github.powerliftingdeveloper/autonoma
     register_id: io.github.powerliftingdeveloper/autonoma
     detected_by: sweep-agent-tools.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   mcp_registry:
     servers:
     - io.github.powerliftingdeveloper/autonoma
@@ -30,42 +30,38 @@ edges:
   - remote-domain
   detected_by: sweep-agent-tools.py
   first_seen: '2026-10-14'
-- partner_name: a2aregistry.org
+- partner_name: A2A protocol (own Agent Card)
   partner: null
   partner_match: register
   type: register
-  direction: partner-built
-  category: A2A agent registry
-  evidence: https://a2aregistry.org/api/agents/08ad0658-117c-41b5-ac00-5e69da3ff119
-  channel: standard-directory
+  direction: provider-built
+  category: A2A agent
+  evidence: https://avalix.ai/.well-known/agent-card.json
+  channel: provider-built
   relationship: compatible
   shape: a2a
-  evidence_kind: register-listing
-  degree: listed
+  evidence_kind: own-wellknown
+  degree: conformant
   report_only: true
-  a2a_register:
-    hosts:
-    - avalix.ai
-    conformance: true
-    task_conformance_working: false
-    healthy: false
-    signal_note: booleans over the provider's hosts; listings are context, never read
+  a2a_card:
+    grade: conformant
+    verdict: live
+    protocol_version: 1.0.0
+    deviations: []
+    card_subject: api
   contract_reference:
-    register: a2aregistry.org /api/agents
+    register: provider's own /.well-known/agent-card.json
     spec_file: null
     standard: A2A
-    role: a2a-registry-listing
-    registered_name: Avalix
+    role: a2a-agent-card
+    registered_name: Autonoma
+    organization: Avalix
     matched_domain: avalix.ai
-    matched_by: domain
-    matched_via: card-host
-    listings_context: 1
-    sample_agents:
-    - Autonoma
+    matched_by: own-domain
     detected_by: sweep-ai-agents.py
-    detected: '2026-10-15'
+    detected: '2026-10-20'
   detected_by: sweep-ai-agents.py
-  first_seen: '2026-10-15'
+  first_seen: '2026-10-20'
 generated: '2026-10-14'
 method: searched
 checked:
