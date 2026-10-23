@@ -77,3 +77,9 @@ x-external-marketplaces:
     offer_id: kh7e7rr5vyrv80xs2a1beqv3g18arfky
     price_usdc: 0.1
     buy_url: https://payanagent.com/x402/kh7e7rr5vyrv80xs2a1beqv3g18arfky
+x-provenance:
+  method: harvested
+  publisher: Avalix
+  source: https://avalix.ai/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
